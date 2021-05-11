@@ -754,7 +754,7 @@ Event onKeyDown(int keyn)
 		actor target = game.GetCurrentCrosshairRef() as actor 
 
 		if target 
-			if  target.IsInCombat() || bridge.ostim.IsChild(target)
+			if  target.IsInCombat() || bridge.ostim.IsChild(target) || target.isdead() || !(target.GetRace().HasKeyword(Keyword.GetKeyword("ActorTypeNPC")))
 				return 
 			endif
 			if isPlayerPartner(target) && (getlikeStat(target) < 1) 

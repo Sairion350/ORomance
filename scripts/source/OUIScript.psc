@@ -331,7 +331,10 @@ function Startup()
 	iWidgets = game.GetFormFromFile(0x000800, "iWant Widgets.esl") as iwant_widgets
 
 	if iWidgets == None
-		debug.MessageBox("ORomance: iWant Widgets is not installed, install failed. Please exit now and reread the requirements page")
+		iWidgets = game.GetFormFromFile(0x000800, "iWant Widgets.esp") as iwant_widgets
+		if iWidgets == None
+			debug.MessageBox("ORomance: iWant Widgets is not installed, install failed. Please exit now and reread the requirements page")
+		endif
 	endif 
 
 
