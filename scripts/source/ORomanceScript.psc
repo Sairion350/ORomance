@@ -373,7 +373,7 @@ Function InquireRelationshipStatus(actor npc)
 		debug.Notification(name + " says " + pronoun + " belongs to you")
 	elseif IsMarried(npc)
 		if monog < 6
-			debug.Notification(name + " says " + pronoun + " is in terrible marriage")
+			debug.Notification(name + " says " + pronoun + " is in a terrible marriage")
 		else 
 			debug.Notification(name + " says " + pronoun + " is married")
 		endif
@@ -696,6 +696,9 @@ bool Function TryPropose(actor npc)
 EndFunction
 
 function CatchPlayerCheating(actor npc)
+	If !bridge.ostim.animationrunning()
+		return 
+	endif 
 	int monog = getMonogamyDesireStat(npc)
 	if monog < 16
 		return 

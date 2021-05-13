@@ -321,14 +321,18 @@ function CheckForPlayerPartners()
 		while i < acts.Length
 			npc = acts[i]
 			if main.isPlayerPartner(npc)
-				if playerref.IsDetectedBy(npc) && !ostim.isactoractive(npc)
+				if playerref.IsDetectedBy(npc) && !ostim.isactoractive(npc) && ostim.AnimationRunning()
 				;console("Player is detected by npc: " + npc.getdisplayname())
 				
 						;uh-oh
 						if ostim.IsSceneAggressiveThemed() && (ostim.getsexpartner(ostim.GetAggressiveActor()) == playerref)
-							npc.StartCombat(ostim.GetAggressiveActor())
+							if ostim.AnimationRunning()
+								npc.StartCombat(ostim.GetAggressiveActor())
+							endif
 						else 
-							main.catchplayercheating(npc)
+							if ostim.AnimationRunning()
+								main.catchplayercheating(npc)
+							endif 
 						endif
 				endif 
 			endif
