@@ -293,15 +293,15 @@ Event ORomanceAsync(string eventName, string strArg, float numArg, Form sender)
 	console("ORomance async thread running")
 	Utility.Wait(2)
 
-	
 	while ostim.AnimationRunning()
+		if main.CheatingConsequencesEnabled()
 		if ostim.IsActorActive(playerref)
 			CheckForPlayerPartners()
 			if main.ismarried(ostim.GetSexPartner(playerref))
 				CheckForNPCSpouses(ostim.GetSexPartner(playerref))
 			endif 
 		endif 
-
+		endif
 		Utility.wait(5)
 	endwhile
 EndEvent
