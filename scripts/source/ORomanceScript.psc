@@ -76,7 +76,7 @@ GlobalVariable property ORUseStationaryMode auto
 GlobalVariable property ORLeft auto
 GlobalVariable property ORRight auto
 GlobalVariable property ORAlwaysAllowNakadashi auto 
-GlobalVariable property ORCheatingConsequencesEnabled auto
+
 
 
 int Function GetDifficultyDiff()
@@ -102,10 +102,6 @@ endfunction
 bool Function AlwaysAllowNakadashi()
 	return (ORAlwaysAllowNakadashi.GetValueInt() == 1)
 endfunction
-
-bool Function CheatingConsequencesEnabled()
-	return (ORCheatingConsequencesEnabled.GetValueInt() == 0)
-endFunction
 
 Event OnInit()
 	oui = (self as quest) as OUIScript
