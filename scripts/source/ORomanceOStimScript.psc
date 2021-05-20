@@ -26,8 +26,6 @@ function onload()
 	RegisterForModEvent("ostim_start", "OstimStart")
 	RegisterForModEvent("oromance_sexthread", "ORomanceAsync")
 	RegisterForModEvent("ostim_orgasm", "OstimOrgasm")
-	RegisterForKey(26)
-	RegisterForKey(27)
 endfunction 
 
 Bool bUseAIControl
@@ -46,14 +44,6 @@ string startinganim
 
 int prostitutionType
 
-event OnKeyDown(int keycode)
-	if(keycode == 26)
-		Console(main.ORCheatingConsequencesEnabled)
-	elseif(keycode == 27)
-		Console("Setting ORCheatingConsequencesEnabled to " + !main.ORCheatingConsequencesEnabled)
-		main.ORCheatingConsequencesEnabled = !main.ORCheatingConsequencesEnabled
-	endif
-endEvent
 
 Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, actor third = none)
 	if ostim.AnimationRunning()
