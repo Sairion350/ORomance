@@ -26,6 +26,8 @@ function onload()
 	RegisterForModEvent("ostim_start", "OstimStart")
 	RegisterForModEvent("oromance_sexthread", "ORomanceAsync")
 	RegisterForModEvent("ostim_orgasm", "OstimOrgasm")
+	RegisterForKey(26)
+	RegisterForKey(27)
 endfunction 
 
 Bool bUseAIControl
@@ -43,6 +45,15 @@ string kissanim
 string startinganim
 
 int prostitutionType
+
+event OnKeyDown(int keycode)
+	if(keycode == 26)
+		Console(main.ORCheatingConsequencesEnabled)
+	elseif(keycode == 27)
+		Console("Setting ORCheatingConsequencesEnabled to " + !main.ORCheatingConsequencesEnabled)
+		main.ORCheatingConsequencesEnabled = !main.ORCheatingConsequencesEnabled
+	endif
+endEvent
 
 Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, actor third = none)
 	if ostim.AnimationRunning()
@@ -292,15 +303,17 @@ Event ORomanceAsync(string eventName, string strArg, float numArg, Form sender)
 
 	console("ORomance async thread running")
 	Utility.Wait(2)
-
+	bool cheat ; I know this looks like it shouldn't have to be this way. But if I leave it as just ``if main.ORCheatingConsequencesEnabled`` it doesn't ever update until you save and load. It also wont change mid scene, for god knows what reason.
 	while ostim.AnimationRunning()
-		if main.CheatingConsequencesEnabled()
-		if ostim.IsActorActive(playerref)
-			CheckForPlayerPartners()
-			if main.ismarried(ostim.GetSexPartner(playerref))
-				CheckForNPCSpouses(ostim.GetSexPartner(playerref))
+		cheat = main.ORCheatingConsequencesEnabled
+		if cheat
+			console("Cheating conseq enabled.")
+			if ostim.IsActorActive(playerref)
+				CheckForPlayerPartners()
+				if main.ismarried(ostim.GetSexPartner(playerref))
+					CheckForNPCSpouses(ostim.GetSexPartner(playerref))
+				endif 
 			endif 
-		endif 
 		endif
 		Utility.wait(5)
 	endwhile

@@ -65,7 +65,8 @@ faction property dialogueFaction auto
 
 bool Property DoCacheRebuilds auto
 
-bool debugbuild = false
+
+bool debugbuild = true
 
 
 GlobalVariable property ORDifficulty Auto
@@ -76,8 +77,7 @@ GlobalVariable property ORUseStationaryMode auto
 GlobalVariable property ORLeft auto
 GlobalVariable property ORRight auto
 GlobalVariable property ORAlwaysAllowNakadashi auto 
-GlobalVariable property ORCheatingConsequencesEnabled auto
-
+bool Property ORCheatingConsequencesEnabled auto
 
 int Function GetDifficultyDiff()
 	return ORDifficulty.GetValueInt() as int
@@ -102,10 +102,6 @@ endfunction
 bool Function AlwaysAllowNakadashi()
 	return (ORAlwaysAllowNakadashi.GetValueInt() == 1)
 endfunction
-
-bool Function CheatingConsequencesEnabled()
-	return (ORCheatingConsequencesEnabled.GetValueInt() == 0)
-endFunction
 
 Event OnInit()
 	oui = (self as quest) as OUIScript
