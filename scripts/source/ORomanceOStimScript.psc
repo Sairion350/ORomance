@@ -44,6 +44,7 @@ string startinganim
 
 int prostitutionType
 
+
 Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, actor third = none)
 	if ostim.AnimationRunning()
 		ostim.EndAnimation(false)
@@ -292,16 +293,18 @@ Event ORomanceAsync(string eventName, string strArg, float numArg, Form sender)
 
 	console("ORomance async thread running")
 	Utility.Wait(2)
-
-	
+	bool cheat ; I know this looks like it shouldn't have to be this way. But if I leave it as just ``if main.ORCheatingConsequencesEnabled`` it doesn't ever update until you save and load. It also wont change mid scene, for god knows what reason.
 	while ostim.AnimationRunning()
-		if ostim.IsActorActive(playerref)
-			CheckForPlayerPartners()
-			if main.ismarried(ostim.GetSexPartner(playerref))
-				CheckForNPCSpouses(ostim.GetSexPartner(playerref))
+		cheat = main.ORCheatingConsequencesEnabled
+		if cheat
+			console("Cheating conseq enabled.")
+			if ostim.IsActorActive(playerref)
+				CheckForPlayerPartners()
+				if main.ismarried(ostim.GetSexPartner(playerref))
+					CheckForNPCSpouses(ostim.GetSexPartner(playerref))
+				endif 
 			endif 
-		endif 
-
+		endif
 		Utility.wait(5)
 	endwhile
 EndEvent

@@ -65,6 +65,7 @@ faction property dialogueFaction auto
 
 bool Property DoCacheRebuilds auto
 
+
 bool debugbuild = false
 
 
@@ -76,8 +77,7 @@ GlobalVariable property ORUseStationaryMode auto
 GlobalVariable property ORLeft auto
 GlobalVariable property ORRight auto
 GlobalVariable property ORAlwaysAllowNakadashi auto 
-
-
+bool Property ORCheatingConsequencesEnabled auto
 
 int Function GetDifficultyDiff()
 	return ORDifficulty.GetValueInt() as int
