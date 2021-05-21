@@ -250,14 +250,17 @@ Event OstimStart(string eventName, string strArg, float numArg, Form sender)
 		
 		; Disable the Nav menu
 		OStim.HideAllSkyUIWidgets()
-	
-		ostim.WarpToAnimation(startinganim + "+01Km")
 
-		Utility.Wait(Utility.RandomInt(6, 9))
+		int wait = ostim.RandomInt(6, 9)
 
-		ostim.WarpToAnimation(kissanim + "+01Kx")
+		String[] Sequence = new String[3]
+		Sequence[0] = startinganim + "+01Km"
+		Sequence[1] = wait as string
+		Sequence[2] = kissanim + "+01Kx"
 
-		Utility.Wait(1)
+		ostim.PlayAnimationSequence(Sequence)
+
+		Utility.Wait(wait + 4)
 
 		ostim.endanimation()
 
@@ -272,7 +275,7 @@ Event OstimStart(string eventName, string strArg, float numArg, Form sender)
 			actor vic = ostim.GetSexPartner(playerref)
 
 			main.increasedislikestat(vic, 30)
-			main.increasehatestat(vic, utility.randomint(1, 30))
+			main.increasehatestat(vic, ostim.randomint(1, 30))
 
 			main.oui.FireSuccessIncidcator(1)
 		endif 
@@ -430,7 +433,7 @@ string function GetRandomAnimationByClass(string cclass)
 
 	int l = odatabase.GetLengthOArray(animations)
 
-	int ret = odatabase.GetObjectOArray(animations, utility.randomint(0, l - 1))
+	int ret = odatabase.GetObjectOArray(animations, ostim.randomint(0, l - 1))
 
 	Return odatabase.GetSceneID(ret)
 endfunction

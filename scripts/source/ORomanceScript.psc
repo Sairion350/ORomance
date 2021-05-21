@@ -711,8 +711,8 @@ function CatchPlayerCheating(actor npc)
 
 	oui.FireSuccessIncidcator(1)
 
-	increasedislikestat(npc, utility.randomint(20, 29))
-	increasehatestat(npc, utility.randomint(4, 10))
+	increasedislikestat(npc, bridge.ostim.randomint(20, 29))
+	increasehatestat(npc, bridge.ostim.randomint(4, 10))
 
 	if bridge.ostim.chanceroll(50)
 		if bridge.ostim.chanceroll(50)
@@ -914,9 +914,9 @@ Function SeedStats(actor npc)
 	StoreNPCDataInt(npc, BaseStatKey, createBaseValue(npc))
 	StoreNPCDataInt(npc, CustomStatKey, 0)
 
-	StoreNPCDataInt(npc, SexDesireKey, Utility.RandomInt(1, 100))
-	StoreNPCDataInt(npc, PrudishnessKey, Utility.RandomInt(1, 100))
-	StoreNPCDataInt(npc, MonogamyDesireKey, Utility.RandomInt(1, 100))
+	StoreNPCDataInt(npc, SexDesireKey, bridge.ostim.RandomInt(1, 100))
+	StoreNPCDataInt(npc, PrudishnessKey, bridge.ostim.RandomInt(1, 100))
+	StoreNPCDataInt(npc, MonogamyDesireKey, bridge.ostim.RandomInt(1, 100))
 
 	StoreNPCDataFloat(npc, lovekey, 0.0)
 	StoreNPCDataFloat(npc, likekey, 0.0)
@@ -933,7 +933,7 @@ Function SeedStats(actor npc)
 
 	StoreNPCDataBool(npc, IsPlayerPartnerKey, false)
 
-	int num = Utility.RandomInt(1, 100)
+	int num = bridge.ostim.RandomInt(1, 100)
 	int sexuality ; 0 - straight  / 1 bisexual / 2 - gay
 	if bridge.ostim.appearsfemale(npc)
 		if num < 91
@@ -1267,9 +1267,9 @@ int Function createBaseValue(actor npc)
 			value += 50
 		EndIf
 
-		value += Utility.RandomInt(-15, 15)
+		value += bridge.ostim.RandomInt(-15, 15)
 	else 
-		value += Utility.RandomInt(60, 140)
+		value += bridge.ostim.RandomInt(60, 140)
 
 		if isGuard
 			value += 30
@@ -1441,7 +1441,7 @@ int function gift(actor npc)
 EndFunction
 
 function compliment(actor npc)
-	int like = Utility.RandomInt(1, 3) ; like NPC should gain
+	int like = bridge.ostim.RandomInt(1, 3) ; like NPC should gain
 
 	int currLike = getlikestat(npc) as Int ; current like stat
 
@@ -1466,7 +1466,7 @@ function compliment(actor npc)
 
 	else  ;player will not gain a like point due to reaching limit
 		oui.FireSuccessIncidcator(1)
-		increasedislikestat(npc, utility.randomint(1,3))
+		increasedislikestat(npc, bridge.ostim.randomint(1,3))
 	endif
 EndFunction
 
@@ -1474,13 +1474,13 @@ function insult(actor npc) ; todo make hate stat lower rel rank
 	int currDis = getdislikeStat(npc) as int 
 
 	if currDis > 5
-		increasehatestat(npc, Utility.RandomInt(1, 2))
+		increasehatestat(npc, bridge.ostim.RandomInt(1, 2))
 	endif
 
 	if bridge.ostim.chanceroll(25)
 		SayTopic(npc, whatthe)
 	endif 
-	increasedislikestat(npc, Utility.RandomInt(1, 3))
+	increasedislikestat(npc, bridge.ostim.RandomInt(1, 3))
 	oui.FireSuccessIncidcator(1)
 endfunction
 
