@@ -434,6 +434,7 @@ EndFunction
 
 bool CacheRebuild = false
 Function OnLoad()
+	uiopen = false
 	SelectKey = Input.GetMappedKey("Activate")
 	ExitKey = Input.GetMappedKey("Tween Menu")
 	

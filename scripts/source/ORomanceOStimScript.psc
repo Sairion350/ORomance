@@ -327,7 +327,7 @@ function CheckForPlayerPartners()
 		while i < acts.Length
 			npc = acts[i]
 			if main.isPlayerPartner(npc)
-				if playerref.IsDetectedBy(npc) && !ostim.isactoractive(npc) && ostim.AnimationRunning()
+				if playerref.IsDetectedBy(npc) && !ostim.isactorinvolved(npc) && ostim.AnimationRunning()
 				;console("Player is detected by npc: " + npc.getdisplayname())
 				
 						;uh-oh

@@ -696,7 +696,7 @@ bool Function TryPropose(actor npc)
 EndFunction
 
 function CatchPlayerCheating(actor npc)
-	If !bridge.ostim.animationrunning()
+	If bridge.ostim.IsActorInvolved(npc) ; cheating bug fix
 		return 
 	endif 
 	int monog = getMonogamyDesireStat(npc)
