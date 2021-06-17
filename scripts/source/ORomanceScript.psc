@@ -911,27 +911,27 @@ int bi = 1
 int gay = 2
 
 Function SeedStats(actor npc)
-	StoreNPCDataInt(npc, BaseStatKey, createBaseValue(npc))
-	StoreNPCDataInt(npc, CustomStatKey, 0)
+	OUtils.StoreNPCDataInt(npc, BaseStatKey, createBaseValue(npc))
+	OUtils.StoreNPCDataInt(npc, CustomStatKey, 0)
 
-	StoreNPCDataInt(npc, SexDesireKey, bridge.ostim.RandomInt(1, 100))
-	StoreNPCDataInt(npc, PrudishnessKey, bridge.ostim.RandomInt(1, 100))
-	StoreNPCDataInt(npc, MonogamyDesireKey, bridge.ostim.RandomInt(1, 100))
+	OUtils.StoreNPCDataInt(npc, SexDesireKey, bridge.ostim.RandomInt(1, 100))
+	OUtils.StoreNPCDataInt(npc, PrudishnessKey, bridge.ostim.RandomInt(1, 100))
+	OUtils.StoreNPCDataInt(npc, MonogamyDesireKey, bridge.ostim.RandomInt(1, 100))
 
-	StoreNPCDataFloat(npc, lovekey, 0.0)
-	StoreNPCDataFloat(npc, likekey, 0.0)
-	StoreNPCDataFloat(npc, dislikekey, 0.0)
-	StoreNPCDataFloat(npc, hatekey, 0.0)
+	OUtils.StoreNPCDataFloat(npc, lovekey, 0.0)
+	OUtils.StoreNPCDataFloat(npc, likekey, 0.0)
+	OUtils.StoreNPCDataFloat(npc, dislikekey, 0.0)
+	OUtils.StoreNPCDataFloat(npc, hatekey, 0.0)
 
 	float time =  Utility.GetCurrentGameTime()
 
-	storenpcdatafloat(npc, LikeLastAccessKey, time)
-	storenpcdatafloat(npc, DisLikeLastAccessKey, time)
+	OUtils.storenpcdatafloat(npc, LikeLastAccessKey, time)
+	OUtils.storenpcdatafloat(npc, DisLikeLastAccessKey, time)
 
-	storenpcdatafloat(npc, LastSeduceTimeKey, 0)
-	storenpcdatafloat(npc, LastKissTimeKey, 0)
+	OUtils.storenpcdatafloat(npc, LastSeduceTimeKey, 0)
+	OUtils.storenpcdatafloat(npc, LastKissTimeKey, 0)
 
-	StoreNPCDataBool(npc, IsPlayerPartnerKey, false)
+	OUtils.StoreNPCDataBool(npc, IsPlayerPartnerKey, false)
 
 	int num = bridge.ostim.RandomInt(1, 100)
 	int sexuality ; 0 - straight  / 1 bisexual / 2 - gay
@@ -953,7 +953,7 @@ Function SeedStats(actor npc)
 		endif
 	endif 
 
-	storenpcdataint(npc, SexualityKey, sexuality)
+	OUtils.storenpcdataint(npc, SexualityKey, sexuality)
 
 	int mult = 10
 	if npc.IsInFaction(FavorJobsBeggarFaction)
@@ -965,7 +965,7 @@ Function SeedStats(actor npc)
 		cost = 1
 	endif
 
-	StoreNPCDataInt(npc, ProstitutionCostKey, cost)
+	OUtils.StoreNPCDataInt(npc, ProstitutionCostKey, cost)
 
 	;calculation 
 	if !IsMarried(npc)
@@ -982,25 +982,25 @@ Function SeedStats(actor npc)
 	endif
 
 
-	StoreNPCDataBool(npc, isSeededKey, true)
+	OUtils.StoreNPCDataBool(npc, isSeededKey, true)
 EndFunction
 
 bool function isSeeded(actor npc)
-	return getNPCDataBool(npc, isSeededKey)
+	return OUtils.getNPCDataBool(npc, isSeededKey)
 EndFunction
 
 bool function isPlayerPartner(actor npc)
-	return GetNPCDataBool(npc, IsPlayerPartnerKey)
+	return OUtils.GetNPCDataBool(npc, IsPlayerPartnerKey)
 EndFunction
 
 bool function setPlayerPartner(actor npc, bool partner)
 	if partner 
-		StoreNPCDataBool(npc, IsPlayerPartnerKey, true)
+		OUtils.StoreNPCDataBool(npc, IsPlayerPartnerKey, true)
 		npc.SetRelationshipRank(playerref, 4)
 		playerref.SetRelationshipRank(npc, 4)
 		increaselovestat(npc, 3)
 	else
-		StoreNPCDataBool(npc, IsPlayerPartnerKey, false)
+		OUtils.StoreNPCDataBool(npc, IsPlayerPartnerKey, false)
 	EndIf
 EndFunction
 
@@ -1008,11 +1008,11 @@ int function GetSexuality(actor npc)
 	if !EnableSexuality()
 		return bi 
 	endif 
-	return getnpcdataint(npc, SexualityKey)
+	return OUtils.getnpcdataint(npc, SexualityKey)
 endfunction
 
  function StoreSexuality(actor npc, int val)
-	 storenpcdataint(npc, SexualityKey, val)
+	 OUtils.storenpcdataint(npc, SexualityKey, val)
 endfunction
 
 function BreakUpOrDivorce(actor npc)
@@ -1035,23 +1035,23 @@ function BreakUpOrDivorce(actor npc)
 endfunction 
 
 int function getPrositutionCost(actor npc)
-	return getnpcdataint(npc, ProstitutionCostKey)
+	return OUtils.getnpcdataint(npc, ProstitutionCostKey)
 EndFunction
 
 function setProstitutionCost(actor npc, int cost)
-	StoreNPCDataInt(npc, ProstitutionCostKey, cost)
+	OUtils.StoreNPCDataInt(npc, ProstitutionCostKey, cost)
 EndFunction
 
 int function getSexDesireStat(actor npc)
-	return getnpcdataint(npc, sexdesirekey)
+	return OUtils.getnpcdataint(npc, sexdesirekey)
 EndFunction
 
 int function getPrudishnessStat(actor npc)
-	return getnpcdataint(npc, Prudishnesskey)
+	return OUtils.getnpcdataint(npc, Prudishnesskey)
 EndFunction
 
 int function getMonogamyDesireStat(actor npc)
-	return getnpcdataint(npc, Monogamydesirekey)
+	return OUtils.getnpcdataint(npc, Monogamydesirekey)
 EndFunction
 
 function increaselovestat(actor npc, float val)
@@ -1067,36 +1067,36 @@ function setlovestat(actor npc, float val)
 	if val < 0
 		val = 0
 	endif 
-	storenpcdatafloat(npc, lovekey, val)
+	OUtils.storenpcdatafloat(npc, lovekey, val)
 EndFunction 
 
 function setlikestat(actor npc, float val)
-	storenpcdatafloat(npc, likekey, val)
+	OUtils.storenpcdatafloat(npc, likekey, val)
 EndFunction 
 
 float function getloveStat(actor npc)
-	return getnpcdatafloat(npc, lovekey)
+	return OUtils.getnpcdatafloat(npc, lovekey)
 EndFunction
 
 float function getLastSeduceTime(actor npc)
-	return getnpcdatafloat(npc, LastSeduceTimeKey)
+	return OUtils.getnpcdatafloat(npc, LastSeduceTimeKey)
 EndFunction
 
 function setLastSeduceTime(actor npc)
-	storenpcdatafloat(npc, LastSeduceTimeKey, Utility.GetCurrentGameTime())
+	OUtils.storenpcdatafloat(npc, LastSeduceTimeKey, Utility.GetCurrentGameTime())
 EndFunction
 
 float function getLastKissTime(actor npc)
-	return getnpcdatafloat(npc, LastKissTimeKey) 
+	return OUtils.getnpcdatafloat(npc, LastKissTimeKey) 
 EndFunction
 
 function setLastKissTime(actor npc)
-	storenpcdatafloat(npc, LastKissTimeKey, Utility.GetCurrentGameTime())
+	OUtils.storenpcdatafloat(npc, LastKissTimeKey, Utility.GetCurrentGameTime())
 EndFunction
 
 float function getlikeStat(actor npc)
-	float lastCalcTime = GetNPCDataFloat(npc, LikeLastAccessKey)
-	float like = getnpcdatafloat(npc, likekey)
+	float lastCalcTime = OUtils.GetNPCDataFloat(npc, LikeLastAccessKey)
+	float like = OUtils.getnpcdatafloat(npc, likekey)
 	float currTime = Utility.GetCurrentGameTime()
 	float diff = currtime - lastCalcTime
 
@@ -1106,8 +1106,8 @@ float function getlikeStat(actor npc)
 		like = 0
 	endif 
 
-	StoreNPCDataFloat(npc, LikeLastAccessKey, currtime)
-	StoreNPCDataFloat(npc, likekey, like)
+	OUtils.StoreNPCDataFloat(npc, LikeLastAccessKey, currtime)
+	OUtils.StoreNPCDataFloat(npc, likekey, like)
 	return like
 EndFunction
 
@@ -1121,8 +1121,8 @@ function increaselikestat(actor npc, float val)
 EndFunction
 
 float function getdislikeStat(actor npc)
-	float lastCalcTime = GetNPCDataFloat(npc, disLikeLastAccessKey)
-	float dislike = getnpcdatafloat(npc, dislikekey)
+	float lastCalcTime = OUtils.GetNPCDataFloat(npc, disLikeLastAccessKey)
+	float dislike = OUtils.getnpcdatafloat(npc, dislikekey)
 	float currTime = Utility.GetCurrentGameTime()
 	float diff = currtime - lastCalcTime
 
@@ -1132,8 +1132,8 @@ float function getdislikeStat(actor npc)
 		dislike = 0
 	endif 
 
-	StoreNPCDataFloat(npc, disLikeLastAccessKey, currtime)
-	StoreNPCDataFloat(npc, dislikekey, dislike)
+	OUtils.StoreNPCDataFloat(npc, disLikeLastAccessKey, currtime)
+	OUtils.StoreNPCDataFloat(npc, dislikekey, dislike)
 	return dislike
 EndFunction
 
@@ -1147,11 +1147,11 @@ function increasedislikestat(actor npc, float val)
 EndFunction
 
 function setdislikestat(actor npc, float val)
-	storenpcdatafloat(npc, DislikeKey, val)
+	OUtils.storenpcdatafloat(npc, DislikeKey, val)
 EndFunction 
 
 float function gethateStat(actor npc)
-	return getnpcdatafloat(npc, hatekey)
+	return OUtils.getnpcdatafloat(npc, hatekey)
 EndFunction
 
 function increasehatestat(actor npc, float val)
@@ -1187,19 +1187,19 @@ function sethatestat(actor npc, float val)
 	if val < 0
 		val = 0
 	endif 
-	storenpcdatafloat(npc, HateKey, val)
+	OUtils.storenpcdatafloat(npc, HateKey, val)
 EndFunction 
 
 int function GetBaseValue(actor npc)
-	return getnpcdataint(npc, BaseStatKey)
+	return OUtils.getnpcdataint(npc, BaseStatKey)
 EndFunction
 
 int function GetCustomValue(actor npc)
-	return getnpcdataint(npc, CustomStatKey)
+	return OUtils.getnpcdataint(npc, CustomStatKey)
 EndFunction
 
 function SetCustomValue(actor npc, int value)
-	return storenpcdataint(npc, CustomStatKey, value)
+	return OUtils.storenpcdataint(npc, CustomStatKey, value)
 EndFunction
 
 bool Function IsMarried(actor npc)
@@ -1325,41 +1325,6 @@ function DisplayStats(actor npc)
 EndFunction
 
 
-function StoreNPCDataFloat(actor npc, string keys, Float num) 
-	StorageUtil.SetFloatValue(npc as form, keys, num)
-	;console("Set value " + num + " for key " + keys)
-EndFunction
-
-Float function GetNPCDataFloat(actor npc, string keys)
-	return StorageUtil.GetFloatValue(npc, keys, -1)
-EndFunction
-
-function StoreNPCDataInt(actor npc, string keys, int num) 
-	StorageUtil.SetIntValue(npc as form, keys, num)
-	;console("Set value " + num + " for key " + keys)
-EndFunction
-
-Int function GetNPCDataInt(actor npc, string keys)
-	return StorageUtil.GetIntValue(npc, keys, -1)
-EndFunction
-
-function StoreNPCDataBool(actor npc, string keys, bool value)
-	int store 
-	if value 
-		store = 1
-	else 
-		store = 0
-	endif
-	StoreNPCDataInt(npc, keys, store)
-	;console("Set value " + store + " for key " + keys)
-EndFunction
-
-Bool function GetNPCDataBool(actor npc, string keys)
-	int value = GetNPCDataInt(npc, keys)
-	bool ret = (value == 1)
-	;console("got value " + value + " for key " + keys)
-	return ret
-EndFunction
 
 int Function GetTimeOfDay() global ; 0 - day | 1 - morning/dusk | 2 - Night
 	float hour = GetCurrentHourOfDay()
@@ -1595,19 +1560,7 @@ endfunction
 function test()
 	console("Running test code")
 
-	actor npc = game.GetCurrentCrosshairRef() as actor
-	setPlayerPartner(npc, true)
-	;oui.SetAsLongTermFollower(game.GetCurrentCrosshairRef() as actor, true)
-	;bridge.StartScene(playerref, game.GetCurrentCrosshairRef() as actor,true)
-	;increasedislikestat(npc, 30)
-	;oui.FireSuccessIncidcator(0)
-	;oui.ShowLoadingIcon()
-	;console(((self as quest).GetAliasById(4) as ReferenceAlias).GetActorRef().GetDisplayName())
-	;CheckForFollowers()
-	;console(IsSpouseNearby(npc))
-	;SayTopic(npc, whatthe)
-	;console(gift(npc))
-	;kiss(npc)
+	;none
 EndFunction
 
 function console(string in)
