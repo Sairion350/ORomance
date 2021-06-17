@@ -296,14 +296,15 @@ Event ORomanceAsync(string eventName, string strArg, float numArg, Form sender)
 
 	console("ORomance async thread running")
 	Utility.Wait(2)
+	actor partner = ostim.GetSexPartner(playerref)
 	bool cheat ; I know this looks like it shouldn't have to be this way. But if I leave it as just ``if main.ORCheatingConsequencesEnabled`` it doesn't ever update until you save and load. It also wont change mid scene, for god knows what reason.
 	while ostim.AnimationRunning()
 		cheat = main.ORCheatingConsequencesEnabled
 		if cheat
-			console("Cheating conseq enabled.")
+			;console("Cheating conseq enabled.")
 			if ostim.IsActorActive(playerref)
 				CheckForPlayerPartners()
-				if main.ismarried(ostim.GetSexPartner(playerref))
+				if main.ismarried(partner) || main.HasGFBF(partner)
 					CheckForNPCSpouses(ostim.GetSexPartner(playerref))
 				endif 
 			endif 
@@ -361,7 +362,7 @@ function CheckForNPCSpouses(actor mainNPC)
 		actor npc
 		while i < acts.Length
 			npc = acts[i]
-			if main.IsNPCSpouse(mainNPC, npc)
+			if main.IsNPCSpouse(mainNPC, npc) || main.IsNPCGFBF(mainNPC, npc)
 				;console("is sposu")
 				if playerref.IsDetectedBy(npc)
 					;console("Starting combat")

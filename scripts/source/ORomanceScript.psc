@@ -6,6 +6,8 @@ OUIScript property OUI auto
 actor property playerref auto
 
 AssociationType property Spouse Auto
+AssociationType Courting
+
 
 FavorJarlsMakeFriendsScript FavorJarlsMakeFriends
 
@@ -126,6 +128,8 @@ Event OnInit()
 	followerfaction = Game.GetFormFromFile(0x05C84E, "Skyrim.esm") as faction
 	Gold = Game.GetFormFromFile(0x00000F, "Skyrim.esm") as MiscObject
 	Spouse = Game.GetFormFromFile(0x0142CA, "Skyrim.esm") as AssociationType
+	Courting = Game.GetFormFromFile(0x01EE23, "Skyrim.esm") as AssociationType
+
 	JarlFaction = Game.GetFormFromFile(0x050920, "Skyrim.esm") as faction
 
 	favorjarlsmakefriends = Game.GetFormFromFile(0x087E24, "Skyrim.esm") as FavorJarlsMakeFriendsScript
@@ -196,7 +200,7 @@ int function GetNPCSV(actor npc)
 	endif 
 
 
-	if IsMarried(npc)
+	if IsMarried(npc) 
 		int monog = getMonogamyDesireStat(npc) ;1- 100
 
 		if monog < 25
@@ -213,7 +217,22 @@ int function GetNPCSV(actor npc)
 			endif
 		endif
 		
+	elseif HasGFBF(npc)
+		int monog = getMonogamyDesireStat(npc) ;1- 100
 
+		if monog < 25
+			if monog < 6
+				npcsv -= 10
+			else 
+				npcSV += 15
+			endif 
+		else 
+			if monog > 90
+				npcSV += 175
+			else 
+				npcSV += 60
+			endif
+		endif
 	EndIf
 
 	if relationshiprank > 0
@@ -376,6 +395,12 @@ Function InquireRelationshipStatus(actor npc)
 			debug.Notification(name + " says " + pronoun + " is in a terrible marriage")
 		else 
 			debug.Notification(name + " says " + pronoun + " is married")
+		endif
+	elseif HasGFBF(npc)
+		if monog < 6
+			debug.Notification(name + " says " + pronoun + " is in a bad relationship")
+		else 
+			debug.Notification(name + " says " + pronoun + " is in a relationship")
 		endif
 	else 
 		debug.Notification(name + " says " + pronoun + " is single")
@@ -675,6 +700,10 @@ int Function GetMarrySV(actor npc)
 	else 
 		 npcSV += 300
 	EndIf
+
+	if HasGFBF(npc)
+		npcSV += 50
+	endif 
 
 	npcsv += 125
 
@@ -1213,7 +1242,7 @@ bool Function IsSpouseNearby(actor npc)
 		int l = nearby.length 
 
 		while i < l
-			if nearby[i].HasAssociation(spouse, npc)
+			if IsNPCSpouse(nearby[i], npc) || IsNPCGFBF(nearby[i], npc)
 				return True
 			endif 
 
@@ -1225,6 +1254,14 @@ endfunction
 
 bool function IsNPCSpouse(actor npc, actor otherNPC)
 	return npc.HasAssociation(spouse, othernpc)
+endfunction 
+
+bool Function HasGFBF(actor npc)
+	return npc.HasAssociation(Courting)
+EndFunction
+
+bool function IsNPCGFBF(actor npc, actor otherNPC)
+	return npc.HasAssociation(Courting, othernpc)
 endfunction 
 
 bool Function IsPlayerSpouse(actor npc)
@@ -1450,9 +1487,9 @@ function insult(actor npc) ; todo make hate stat lower rel rank
 endfunction
 
 Function kiss(actor npc)
-	if IsMarried(npc)
+	if IsMarried(npc) || HasGFBF(npc)
 		if IsSpouseNearby(npc)
-			debug.Notification(npc.GetDisplayName() + " wants to kiss but their spouse is nearby")
+			debug.Notification(npc.GetDisplayName() + " wants to kiss but their partner is nearby")
 			return 
 		endif 
 	endif 
