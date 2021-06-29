@@ -159,7 +159,11 @@ Event OnInit()
 	if debugbuild
 		return 
 	endif
+
+	OUtils.RegisterForOUpdate(self)
 	oui.ShowInstalled()
+
+
 EndEvent
 
 bool function IsPlayerMarried()
