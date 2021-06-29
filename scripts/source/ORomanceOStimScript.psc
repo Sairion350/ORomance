@@ -364,7 +364,7 @@ function CheckForNPCSpouses(actor mainNPC)
 			npc = acts[i]
 			if main.IsNPCSpouse(mainNPC, npc) || main.IsNPCGFBF(mainNPC, npc)
 				;console("is sposu")
-				if playerref.IsDetectedBy(npc)
+				if playerref.IsDetectedBy(npc) && (main.getMonogamyDesireStat(npc) > 15)
 					;console("Starting combat")
 					main.oui.FireSuccessIncidcator(1)
 					actor a = ostim.GetSexPartner(mainnpc)
