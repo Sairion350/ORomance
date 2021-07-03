@@ -888,7 +888,7 @@ Function ShowPage(int pageID)
 
 
 		If prostitute
-			Element4 = RenderElement(posData[3], "coin", colorYellow, "Prostituion")
+			Element4 = RenderElement(posData[3], "coin", colorYellow, "Prostitution")
 		EndIf
 
 	elseif pageid == PageApologize
