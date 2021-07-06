@@ -739,6 +739,9 @@ function ProcessEvent(int page, int element)
 		if element == 1
 			ShowPage(PageRomance)
 		elseif element == 2
+			if main.IsVirgin(npc)
+				cost *= 3
+			endif 
 			if playergold >= (cost)
 				FireSuccessIncidcator(0)
 				prostitutionType = 1
@@ -936,19 +939,28 @@ Function ShowPage(int pageID)
 		endif
 	Elseif pageid == PageSolicit
 		int cost = main.getPrositutionCost(npc)
+		int vaginalCost = cost 
+		if main.IsVirgin(npc)
+			vaginalCost *= 3
+		endif 
+
 		debug.Notification("You have " + main.GetPlayerGold() + " gold")
 		int[] posData = GetElementLayoutByElementCount(layoutCount - 1)
 
 		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
-		Element2 = RenderElement(posData[1], "coin", colorYellow, "Solicit", subtextstr="Price: " + (cost * 0.25) as int + " - " + (cost) + " septims")
+		Element2 = RenderElement(posData[1], "coin", colorYellow, "Solicit", subtextstr="Price: " + (cost * 0.25) as int + " - " + (vaginalCost) + " septims")
 
 	Elseif pageid == PageSolicitSpecific
 		int cost = main.getPrositutionCost(npc)
+		int vaginalCost = cost 
+		if main.IsVirgin(npc)
+			vaginalCost *= 3
+		endif 
 
 		int[] posData = GetElementLayoutByElementCount(layoutCount + 1)
 
 		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
-		Element2 = RenderElement(posData[1], "vagina", colorPink, "Vaginal/anything", subtextstr=cost + " septims")
+		Element2 = RenderElement(posData[1], "vagina", colorPink, "Vaginal/anything", subtextstr=vaginalCost + " septims")
 		Element3 = RenderElement(posData[2], "hand", colorPink, "Hand job", subtextstr= (cost * 0.25) as int + " septims")
 		Element4 = RenderElement(posData[3], "lips", colorPink, "Blow job", subtextstr= (cost * 0.5) as int + " septims")
 		
