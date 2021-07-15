@@ -112,7 +112,7 @@ Event OnInit()
 	oui.Startup()
 	bridge.startup()
 
-	if bridge.ostim.GetAPIVersion() < 15
+	if bridge.ostim.GetAPIVersion() < 16
 		debug.MessageBox("Your OStim version is out of date. ORomance requires a newer version.")
 		return
 	endif 
@@ -151,6 +151,10 @@ Event OnInit()
 	fail = game.GetFormFromFile(0x004E1A, "ORomance.esp") as sound
 
 	RegisterForSingleUpdate(1)
+	
+	OUtils.RegisterForOUpdate(self)
+	bridge.ostim.RegisterForGameLoadEvent(self)
+
 
 	onload()
 
@@ -160,7 +164,6 @@ Event OnInit()
 		return 
 	endif
 
-	OUtils.RegisterForOUpdate(self)
 	oui.ShowInstalled()
 
 
@@ -781,8 +784,13 @@ function onload()
 	oui.OnLoad()
 EndFunction
 
+Event OnGameLoad()
+	console("ORomance loading...")
+	onload()
+EndEvent
+
 Event onKeyDown(int keyn)
-	If (Utility.IsInMenuMode() || UI.IsMenuOpen("console")) || oui.uiopen
+	If (Utility.IsInMenuMode() || UI.IsMenuOpen("console")) || oui.uiopen || bridge.ostim.AnimationRunning()
 		Return
 	EndIf
 
@@ -790,7 +798,7 @@ Event onKeyDown(int keyn)
 		actor target = game.GetCurrentCrosshairRef() as actor 
 
 		if target 
-			if  target.IsInCombat() || bridge.ostim.IsChild(target) || target.isdead() || !(target.GetRace().HasKeyword(Keyword.GetKeyword("ActorTypeNPC")))
+			if  target.IsInCombat() || OUtils.IsChild(target) || target.isdead() || !(target.GetRace().HasKeyword(Keyword.GetKeyword("ActorTypeNPC")))
 				return 
 			endif
 			if isPlayerPartner(target) && (getlikeStat(target) < 1) 
