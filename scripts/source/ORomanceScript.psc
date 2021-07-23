@@ -394,24 +394,34 @@ Function InquireRelationshipStatus(actor npc)
 
 	int monog = getMonogamyDesireStat(npc) ;1- 100
 
-
+	string status
 	if isPlayerPartner(npc)
-		debug.Notification(name + " says " + pronoun + " belongs to you")
+		status = name + " says " + pronoun + " belongs to you"
 	elseif IsMarried(npc)
 		if monog < 6
-			debug.Notification(name + " says " + pronoun + " is in a terrible marriage")
+			status = name + " says " + pronoun + " is in a terrible marriage"
 		else 
-			debug.Notification(name + " says " + pronoun + " is married")
+			status = name + " says " + pronoun + " is married"
 		endif
+
+		if IsFamiliarWithPlayer(npc)
+			status = status + GetSpouseString(npc)
+		endif 
 	elseif HasGFBF(npc)
 		if monog < 6
-			debug.Notification(name + " says " + pronoun + " is in a bad relationship")
+			status = name + " says " + pronoun + " is in a bad relationship"
 		else 
-			debug.Notification(name + " says " + pronoun + " is in a relationship")
+			status = name + " says " + pronoun + " is in a relationship"
 		endif
+
+		if IsFamiliarWithPlayer(npc)
+			status = status + GetPartnerString(npc)
+		endif 
 	else 
-		debug.Notification(name + " says " + pronoun + " is single")
+		status = name + " says " + pronoun + " is single"
 	endif 
+
+	debug.Notification(status)
 endfunction
 
 Function InquireSexuality(actor npc)
@@ -730,6 +740,12 @@ bool Function TryPropose(actor npc)
 	return (playerSV > npcSV)
 
 EndFunction
+
+bool function IsFamiliarWithPlayer(actor npc)
+	return (getlikeStat(npc) > 3) || (getloveStat(npc) > 2) || (npc.GetRelationshipRank(playerref) > 0)
+
+endfunction
+
 
 function CatchPlayerCheating(actor npc)
 	If bridge.ostim.IsActorInvolved(npc) ; cheating bug fix
@@ -1246,6 +1262,39 @@ EndFunction
 bool Function IsMarried(actor npc)
 	return npc.HasAssociation(Spouse)
 EndFunction
+
+actor[] Function GetSpouses(actor npc)
+	ActorBase[] spouses = osanative.LookupRelationshipPartners(npc, spouse)
+
+	return OUtils.BaseArrToActorArr(spouses)
+EndFunction
+
+actor[] Function GetPartners(actor npc)
+	ActorBase[] partners = osanative.LookupRelationshipPartners(npc, Courting)
+
+	return OUtils.BaseArrToActorArr(partners)
+EndFunction
+
+string function GetPartnerString(actor npc)
+	return " with " + osanative.getdisplayname(GetPartners(npc)[0])
+endfunction
+
+string function GetSpouseString(actor npc)
+	string ret = " to "
+	actor[] spouses = GetSpouses(npc)
+
+	ret = ret + osanative.getdisplayname(spouses[0])
+
+	int i = 1
+	int l = spouses.Length
+	while i < l 
+		ret = ret + ", " + osanative.getdisplayname(spouses[i])
+
+		i += 1
+	endwhile
+
+	return ret
+endfunction
 
 bool Function IsSpouseNearby(actor npc)
 		actor[] nearby = MiscUtil.ScanCellNPCs(npc, radius = 0.0)
