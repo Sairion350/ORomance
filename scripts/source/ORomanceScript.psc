@@ -1276,7 +1276,20 @@ actor[] Function GetPartners(actor npc)
 EndFunction
 
 string function GetPartnerString(actor npc)
-	return " with " + osanative.getdisplayname(GetPartners(npc)[0])
+	string ret = " with "
+	actor[] partners = GetPartners(npc)
+
+	ret = ret + osanative.getdisplayname(partners[0])
+
+	int i = 1
+	int l = partners.Length
+	while i < l 
+		ret = ret + ", " + osanative.getdisplayname(partners[i])
+
+		i += 1
+	endwhile
+
+	return ret
 endfunction
 
 string function GetSpouseString(actor npc)
