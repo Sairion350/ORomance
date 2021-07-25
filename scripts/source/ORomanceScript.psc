@@ -68,7 +68,7 @@ faction property dialogueFaction auto
 bool Property DoCacheRebuilds auto
 
 
-bool debugbuild = false
+bool debugbuild = true
 
 
 GlobalVariable property ORDifficulty Auto
@@ -112,7 +112,7 @@ Event OnInit()
 	oui.Startup()
 	bridge.startup()
 
-	if bridge.ostim.GetAPIVersion() < 16
+	if bridge.ostim.GetAPIVersion() < 21
 		debug.MessageBox("Your OStim version is out of date. ORomance requires a newer version.")
 		return
 	endif 
@@ -1476,7 +1476,7 @@ function TryApology(actor npc)
 		oui.FireSuccessIncidcator(0)
 		increasedislikestat(npc, -1)
 		if getdislikeStat(npc) < 20
-			oui.showpage(1)
+			oui.showpage(oui.pages.front() as orpage)
 		endif 
 	Else
 		
