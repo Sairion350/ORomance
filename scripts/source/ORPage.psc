@@ -12,7 +12,7 @@ bool property visible auto
 ORButton property selectedButton auto 
 int Property selectedButtonID
 	int Function Get()
-		return buttons.find(selectedButton as form)
+		return buttons.find(selectedButton)
 	EndFunction
 EndProperty
 

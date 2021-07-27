@@ -68,7 +68,7 @@ faction property dialogueFaction auto
 bool Property DoCacheRebuilds auto
 
 
-bool debugbuild = true
+bool debugbuild = false
 
 
 GlobalVariable property ORDifficulty Auto

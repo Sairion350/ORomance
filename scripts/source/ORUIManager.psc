@@ -5,7 +5,7 @@ OUIScript oUI
 
 
 Event RebuildPages()
-	GetOStim().Profile()
+	;GetOStim().Profile()
 
 	console("Rebuilding pages...")
 	Vector_Form pages = oui.pages
@@ -14,8 +14,8 @@ Event RebuildPages()
 		(pages.i() as orpage).Load()
 	endwhile
 	console("All pages rebuilt")
-	
-	GetOStim().Profile("Build")
+
+	;GetOStim().Profile("Build")
 EndEvent
 
 ORUIManager Function NewObject() Global
