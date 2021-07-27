@@ -96,4 +96,4 @@ jobs:
     - name: Upload to discord
       if: success()
       run: |
-        python ./repo/discord_uploader.py ${{ secrets.discord_bot_token }} ${{ secrets.discord_bot_channel }} ./repo/${Env:dist-path}
+        python ./repo/discord_uploader.py ${{ secrets.discord_bot_token }} ${{ secrets.discord_bot_channel }} repo\${Env:dist-path}\${{ env.build_names }}
