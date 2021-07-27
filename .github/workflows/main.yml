@@ -13,7 +13,7 @@ jobs:
       matrix:
       # Set the project file paths relative to the current repo
         project-path:
-        - 'oromance_ci.ppj'
+        - 'ORomance_CI.ppj'
     env:
       # Set these
       dist-path: ..\dist                                # Folder containing the output from the project files
