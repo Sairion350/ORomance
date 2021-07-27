@@ -69,7 +69,7 @@ jobs:
       if: success()
       run: |
         cd repo\${Env:dist-path}
-        7z x *zip -o* -mx=9
+        7z x *zip -o* 
         echo "build_names=$(Get-ChildItem -Filter *. -Name)" >> ${Env:GITHUB_ENV}
         echo "build_paths=$($(Get-ChildItem -Filter *. | % { $_.FullName }) -join ",")" >> ${Env:GITHUB_ENV}
 
@@ -96,4 +96,4 @@ jobs:
     - name: Upload to discord
       if: success()
       run: |
-        python ./repo/discord_uploader.py ${{ secrets.discord_bot_token }} ${{ secrets.discord_bot_channel }} ${{ env.build_names }}
+        python ./repo/discord_uploader.py ${{ secrets.discord_bot_token }} ${{ secrets.discord_bot_channel }} ./repo/${Env:dist-path}

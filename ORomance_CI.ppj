@@ -29,7 +29,7 @@
         <Folder>@MyProject\Scripts\Source</Folder>
     </Folders>
     <ZipFiles Output="@Dist">
-        <ZipFile Name="@ModName" RootDir="@MyProject" Compression="store">
+        <ZipFile Name="@ModName" RootDir="@MyProject" Compression="deflate">
         	<Include NoRecurse="true">*.esp</Include>
             <Include>Scripts</Include>
             <Include>Interface</Include>
