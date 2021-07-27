@@ -69,7 +69,7 @@ jobs:
       if: success()
       run: |
         cd repo\${Env:dist-path}
-        7z x *zip -o*
+        7z x *zip -o* -mx=9
         echo "build_names=$(Get-ChildItem -Filter *. -Name)" >> ${Env:GITHUB_ENV}
         echo "build_paths=$($(Get-ChildItem -Filter *. | % { $_.FullName }) -join ",")" >> ${Env:GITHUB_ENV}
 
