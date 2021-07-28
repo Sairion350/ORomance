@@ -36,6 +36,7 @@ bool bEnableDomBar
 bool bEnableSubBar
 bool bUseAINonAggressive
 bool bAutoUndressIfNeeded
+bool bRequireBothActorsOrgasm
 
 bool isKiss
 
@@ -137,6 +138,9 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 		;enable mid-scene undress
 		bAutoUndressIfNeeded = ostim.AutoUndressIfNeeded
 		ostim.AutoUndressIfNeeded = true
+
+		bRequireBothActorsOrgasm = ostim.RequireBothOrgasmsToFinish
+		ostim.RequireBothOrgasmsToFinish = false 
 
 		string aclass
 		if prostitutionType == 2 ; handjob
@@ -389,6 +393,7 @@ Event OstimEnd(string eventName, string strArg, float numArg, Form sender)
 		OStim.UseFreeCam = bUseFreeCam
 		ostim.EnableDomBar = bEnableDomBar
 		ostim.EnableSubBar = bEnableSubBar
+		ostim.RequireBothOrgasmsToFinish = bRequireBothActorsOrgasm
 
 
 	endif 
