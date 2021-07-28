@@ -11,7 +11,7 @@ Function Startup()
 
 	console("ORomance OStim bridge ready")
 
-	ostim = game.GetFormFromFile(0x000801, "Ostim.esp") as OsexIntegrationMain
+	ostim = OUtils.GetOStim()
 	playerref = game.GetPlayer()
 
 	prostitutionType = 1
@@ -170,12 +170,12 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 EndFunction
 
 Event OstimOrgasm(string eventName, string strArg, float numArg, Form sender)
-	if !ostim.IsActorActive(playerref)
+	if !ostim.IsActorInvolved(playerref)
 		return 
 	endif 
 	
 	actor npc = ostim.GetMostRecentOrgasmedActor()
-	if (npc != playerref) && !hadOrgasmRelIncrease && ostim.IsActorActive(playerref)
+	if (npc != playerref) && !hadOrgasmRelIncrease
 		if ostim.IsSceneAggressiveThemed()
 			return 
 		endif 
@@ -206,7 +206,8 @@ Event OstimOrgasm(string eventName, string strArg, float numArg, Form sender)
 		if love > 0
 			main.oui.FireSuccessIncidcator(0)
 		endif
-	endif 
+	endif
+
 	if npc == playerref 
 		npc = ostim.getsexpartner(playerref)
 		if ostim.IsVaginal() && !ostim.isfemale(playerref)
@@ -216,7 +217,7 @@ Event OstimOrgasm(string eventName, string strArg, float numArg, Form sender)
 			if main.IsPlayerSpouse(npc) || main.AlwaysAllowNakadashi()
 				;it's fine do nothing
 			else
-				if !main.IsOkToEjaculateInside(npc) ;todo test
+				if !main.IsOkToEjaculateInside(npc) 
 					if ostim.ChanceRoll(10) ; didn't notice
 						debug.Notification(npc.GetDisplayName() + " didn't notice you cumming inside her")
 						return
@@ -247,7 +248,6 @@ EndEvent
 
 bool playerCameInsidePussy
 Event OstimStart(string eventName, string strArg, float numArg, Form sender)
-	SendModEvent("oromance_sexthread")
 	hadOrgasmRelIncrease = false
 	playerCameInsidePussy = false
 	if iskiss 
