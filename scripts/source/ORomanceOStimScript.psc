@@ -53,6 +53,8 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 
 	startinganim = ""
 	if kiss 
+		ostim.AddSceneMetadata("kiss")
+
 		startinganim = "0MF|Sy6!Sy9|Em|St9AdoreKm"
 		; 0MF|Sy6!LLy9|Em|LiftedLotusKm jump up on and kiss    0MF|Sy6!LLy9|Em|LiftedLotusEmb
 		; 0MF|Sy6!Sy9|Em|CurlicueKm kiss iwth one leg wrapped around 0MF|Sy6!Sy9|Em|CurlicueEmb
@@ -122,6 +124,8 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 	endif 
 
 	if prostitutionType != 1
+		ostim.AddSceneMetadata("npc_prostitution")
+
 		; Disable the controls
 		OStim.DisableOSAControls = true
 
@@ -161,6 +165,7 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 
 	endif 
 
+	ostim.AddSceneMetadata("oromance")
 	ostim.startscene(dom, sub, zStartingAnimation = startinganim, zThirdActor = third)
 EndFunction
 
