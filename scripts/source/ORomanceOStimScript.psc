@@ -46,10 +46,7 @@ int prostitutionType
 
 
 Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, actor third = none)
-	if ostim.AnimationRunning()
-		ostim.EndAnimation(false)
-		Utility.Wait(2) 
-	endif 
+
 
 	prostitutionType = sextype
 
