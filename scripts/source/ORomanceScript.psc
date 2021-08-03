@@ -164,7 +164,8 @@ Event OnInit()
 		return 
 	endif
 
-	oui.ShowInstalled()
+	;oui.ShowInstalled()
+	BaseObject.CallEventOnForm(oui, "ShowInstalled")
 
 
 EndEvent
@@ -218,9 +219,17 @@ int function GetNPCSV(actor npc)
 			endif 
 		else 
 			if monog > 90
-				npcSV += 275
+				if IsWidowed(npc)
+					npcSV += 135
+				else 
+					npcSV += 275
+				endif 
 			else 
-				npcSV += 175
+				if IsWidowed(npc)
+					npcSV += 35
+				else 
+					npcSV += 175
+				endif 
 			endif
 		endif
 		
@@ -398,15 +407,20 @@ Function InquireRelationshipStatus(actor npc)
 	if isPlayerPartner(npc)
 		status = name + " says " + pronoun + " belongs to you"
 	elseif IsMarried(npc)
-		if monog < 6
-			status = name + " says " + pronoun + " is in a terrible marriage"
+		if IsWidowed(npc)
+			status = name + " says " + pronoun + " is widowed"
 		else 
-			status = name + " says " + pronoun + " is married"
-		endif
+			if monog < 6
+				status = name + " says " + pronoun + " is in a terrible marriage"
+			else 
+				status = name + " says " + pronoun + " is married"
+			endif
 
-		if IsFamiliarWithPlayer(npc)
-			status = status + GetSpouseString(npc)
-		endif 
+			if IsFamiliarWithPlayer(npc)
+				status = status + GetSpouseString(npc)
+			endif 
+		endif
+		
 	elseif HasGFBF(npc)
 		if monog < 6
 			status = name + " says " + pronoun + " is in a bad relationship"
@@ -1263,6 +1277,37 @@ bool Function IsMarried(actor npc)
 	return npc.HasAssociation(Spouse)
 EndFunction
 
+bool Function IsWidowed(actor npc)
+	actor[] spouses = GetSpouses(npc)
+	int i = 0
+	int l = spouses.Length
+	while i < l 
+		if !spouses[i].IsDead()
+			return false 
+		endif 
+
+		i += 1
+	endwhile
+
+	return true 
+EndFunction
+
+bool Function IsBrokenUp(actor npc)
+	actor[] partners = GetPartners(npc)
+	int i = 0
+	int l = partners.Length
+	while i < l 
+		if !partners[i].IsDead()
+			return false 
+		endif 
+
+		i += 1
+	endwhile
+
+	return true 
+EndFunction
+
+
 actor[] Function GetSpouses(actor npc)
 	ActorBase[] spouses = osanative.LookupRelationshipPartners(npc, spouse)
 
@@ -1331,7 +1376,11 @@ bool function IsNPCSpouse(actor npc, actor otherNPC)
 endfunction 
 
 bool Function HasGFBF(actor npc)
-	return npc.HasAssociation(Courting)
+	if npc.HasAssociation(Courting)
+		return !IsBrokenUp(npc)
+	else 
+		return false
+	endif 
 EndFunction
 
 bool function IsNPCGFBF(actor npc, actor otherNPC)

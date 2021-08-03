@@ -144,16 +144,20 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 		ostim.AutoUndressIfNeeded = true
 
 		bRequireBothActorsOrgasm = ostim.RequireBothOrgasmsToFinish
-		ostim.RequireBothOrgasmsToFinish = false 
+		
 
 		string aclass
 		if prostitutionType == 2 ; handjob
+			ostim.AddSceneMetadata("SpecialEndConditions")
+			ostim.RequireBothOrgasmsToFinish = false 
 			if ostim.ChanceRoll(50)
 				aclass = "HJ"
 			else 
 				aclass = "ApHJ"
 			endif 
 		elseif prostitutionType == 3
+			ostim.AddSceneMetadata("SpecialEndConditions")
+			ostim.RequireBothOrgasmsToFinish = false 
 			if ostim.ChanceRoll(50)
 				aclass = "BJ"
 			else 
