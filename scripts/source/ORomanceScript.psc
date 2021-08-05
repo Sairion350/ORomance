@@ -165,7 +165,9 @@ Event OnInit()
 	endif
 
 	;oui.ShowInstalled()
-	BaseObject.CallEventOnForm(oui, "ShowInstalled")
+	RegisterForModEvent("OR_inst", "ShowInstalled")
+	int me = ModEvent.Create("OR_inst")
+	ModEvent.send(me)
 
 
 EndEvent
