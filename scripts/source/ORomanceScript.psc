@@ -112,7 +112,7 @@ Event OnInit()
 	oui.Startup()
 	bridge.startup()
 
-	if bridge.ostim.GetAPIVersion() < 21
+	if bridge.ostim.GetAPIVersion() < 16
 		debug.MessageBox("Your OStim version is out of date. ORomance requires a newer version.")
 		return
 	endif 
@@ -1525,7 +1525,7 @@ function TryApology(actor npc)
 		oui.FireSuccessIncidcator(0)
 		increasedislikestat(npc, -1)
 		if getdislikeStat(npc) < 20
-			oui.showpage(oui.pages.front() as orpage)
+			oui.showpage(1)
 		endif 
 	Else
 		

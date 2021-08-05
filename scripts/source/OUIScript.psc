@@ -25,22 +25,17 @@ int SlotLeftClose
 int SlotRightClose
 int SlotRightFar
 
-ORPage PageMain
-ORPage PageRomance
-ORPage PageInteract
-ORPage PageInquire
-ORPage PageRelationship
-ORPage PageSolicit
-ORPage PageSolicitSpecific
-ORPage PageTalk
-ORPage PageApologize
-ORPage PageStartSex
+int PageMain
+int PageRomance
+int PageInteract
+int PageInquire
+int PageRelationship
+int PageSolicit
+int PageSolicitSpecific
+int PageTalk
+int PageApologize
 
-Vector_Form property pages auto
-
-ORPage CurrentPage
-
-ORUIManager manager
+int PageStartSex
 
 int leftKey
 int rightKey
@@ -85,16 +80,12 @@ bool followerIsInProstitutionContext
 int prostitutionType
 int prostitutionCost
 
-bool isProstitute 
-int baseCost
-int vaginalCost
-
 bool firstOpen
 
 bool ShownFollowHint
 
 
-Function EnterDialogueWith(actor act, ORPage page = none)
+Function EnterDialogueWith(actor act)
 	main.bridge.ostim.PlayTickBig()
 	npc = act 
 	firstOpen = true
@@ -104,7 +95,7 @@ Function EnterDialogueWith(actor act, ORPage page = none)
 	SendModEvent("oromance_followthread")
 	SendModEvent("oromance_healththread")
 
-	name = OSANative.GetDisplayName(npc)
+	name = npc.GetDisplayName()
 	if main.bridge.ostim.AppearsFemale(npc)
 		gfbf = "girlfriend"
 	else 
@@ -115,22 +106,11 @@ Function EnterDialogueWith(actor act, ORPage page = none)
 
 	if CacheRebuild
 		CacheRebuild = False
-		manager.CallEvent("RebuildPages")
+		RebuildCache()
 	endif 
 
-	isProstitute = main.isProstitute(npc)
-	if isProstitute
-		baseCost = main.getPrositutionCost(npc)
-		if main.isvirgin(npc)
-			vaginalCost = baseCost * 3
-		else 
-			vaginalCost = baseCost
-		endif 
-	endif 
 
-	if page != None
-		ShowPage(page)
-	elseif (act == follower1)
+	if (act == follower1)
 		showpage(PageStartSex)
 	elseif main.getdislikeStat(npc) > 19
 		ShowPage(PageApologize)
@@ -141,129 +121,6 @@ Function EnterDialogueWith(actor act, ORPage page = none)
 		ShowPage(pagemain)
 	endif 
 EndFunction
-
-Function BuildPages()
-	console("Building pages...")
-	main.bridge.ostim.Profile()
-
-	manager.Destroy()
-	manager = oruimanager.NewObject()
-	pages.DestroyAll()
-	pages = Vector_Form.NewObject()
-	orpage page
-
-
-	page = orpage.NewObject(3)
-
-	page.addbutton("ecks", colorlightred, "Exit")
-	page.addbutton("heart", colorPink, "Romance")
-	page.addbutton("dot", colorBlue, "Interact")
-
-	pages.push_back(page)
-	PageMain = page 
-
-
-	page = orpage.NewObject(3) ;special
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("heart", colorRed, "Try to seduce")
-	page.addbutton("lips", colorRed, "Try to kiss")
-
-	pages.push_back(page)
-	PageRomance = page
-
-
-	page = orpage.NewObject(5) 
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("question", colorGreen, "Inquire")
-	page.addbutton("ring", colorBlue, "Relationship")
-	page.addbutton("gift", colorYellow, "Give gift")
-	page.addbutton("speech1", colorPink, "Say")
-
-	pages.push_back(page)
-	PageInteract = page
-
-
-	page = orpage.NewObject(3)
-
-	page.addbutton("ecks", colorlightred, "Exit")
-	page.addbutton("heart", colorRed, "Have sex")
-	page.addbutton("cancel", colorRed, "Cancel Sex")
-
-	pages.push_back(page)
-	PageStartSex = page
-
-
-	page = orpage.NewObject(4)
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("question", colorPink, "Ask about sexual experience")
-	page.addbutton("question", colorYellow, "Ask about current relationships")
-	page.addbutton("question", colorBlue, "Ask about sexuality")
-
-
-	pages.push_back(page)
-	PageInquire = page
-
-
-	page = orpage.NewObject(2) 
-
-	page.addbutton("ecks", colorlightred, "Exit")
-	page.addbutton("anger", colorRed, "Apologize")
-
-	pages.push_back(page)
-	PageApologize = page
-
-
-	page = orpage.NewObject(3) ; special
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("speech1", colorGreen, "Compliment ")
-	page.addbutton("speech1", colorYellow, "Insult ")
-
-
-	pages.push_back(page)
-	PageTalk = page
-
-
-	page = orpage.NewObject(3) ;special 
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("heartring", colorRed, "Confess love")
-	page.addbutton("marry", colorYellow, "Propose marriage")
-
-
-	pages.push_back(page)
-	PageRelationship = page
-
-	page = orpage.NewObject(2) ;special 
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("coin", colorYellow, "Solicit")
-
-
-	pages.push_back(page)
-	PageSolicit = page
-
-
-
-	page = orpage.NewObject(4) ; special
-
-	page.addbutton("arrow", colorlightred, "Back")
-	page.addbutton("vagina", colorPink, "Vaginal/anything")
-	page.addbutton("hand", colorPink, "Hand job")
-	page.addbutton("lips", colorPink, "Blow job")
-
-
-	pages.push_back(page)
-	PageSolicitSpecific = page
-
-
-
-	console("Pages built")
-	main.bridge.ostim.Profile("Page building")
-endfunction
 
 Function ExitDialogue(int waitTime = 2)
 	uiopen = false
@@ -501,7 +358,16 @@ function Startup()
 
 
 
-
+	PageMain = 1
+	PageRomance = 2
+	PageInteract = 3
+	PageInquire = 4
+	PageSolicit = 5
+	PageSolicitSpecific = 7
+	PageRelationship = 6
+	PageStartSex = 8
+	PageTalk = 9
+	PageApologize = 10
 
 	prostitutionType = -1
 	prostitutionCost = -1
@@ -554,10 +420,9 @@ function Startup()
 	colorYellow[1] = 143
 	colorYellow[2] = 61
 
-	BuildPages()
+	ClearCache()
 
-
-
+	ReInitElementStorage()
 
 	;OnLoad()
 
@@ -591,20 +456,38 @@ Function OnLoad()
 
 	if main.DoCacheRebuilds
 		CacheRebuild = true
-	
-		pages.ResetLooping()
-		while pages.Loop()
-			(pages.i() as ORPage).built = false
-		EndWhile
+	else 
+		ClearCache()
 	endif
 	
 	;RegisterForModEvent("oromance_render", "RenderElementAsync")
 	
 EndFunction
 
+function ClearCache()
+
+	TextWidgetkeys = new String[1]
+	TextWidgetkeys[0] = "aaaaaaaaa"
+	TextWidgetValues = new Int[1]
+	TextWidgetkeys[0] = -1
+
+	CoreWidgetkeys = new String[1]
+	CoreWidgetkeys[0] = "aaaaaaaaa"
+	CoreWidgetValues = new Int[1]
+	CoreWidgetValues[0] = -1
+
+	InitBrackets()
+
+endfunction 
+
 Function ExitUI()
-	currentpage.hide()
+	FadeOutAllElements()
 	Utility.Wait(0.5)
+	DestroyAllElements()
+	ReinitelementStorage()
+
+	currentpage = -1
+	selectedelement = -1
 EndFunction
 
 Event OnKeyDown(Int KeyPress)
@@ -618,28 +501,36 @@ Event OnKeyDown(Int KeyPress)
 	EndIf
 	
 	if KeyPress == leftKey
-
-			
-			CurrentPage.CursorLeft()
+		if selectedElement == 1
+			return 
+		else 
+			main.bridge.ostim.PlayTickSmall()
+			DeselectElement(GetElementByID(selectedElement))
+			selectedElement -= 1
+			SelectElement(GetElementByID(selectedElement))
 
 			if main.PlayerHasPsychicPerk(npc)
 				UpdateColor()
 			endif 
- 
+		endif 
 	elseif KeyPress == rightKey 
-		
-			
-			CurrentPage.CursorRight()
+		if GetElementByID(selectedElement + 1).Length == 1
+			return 
+		else 
+			main.bridge.ostim.PlayTickSmall()
+			DeselectElement(GetElementByID(selectedElement))
+			selectedElement += 1
+			SelectElement(GetElementByID(selectedElement))
 
 			if main.PlayerHasPsychicPerk(npc)
 				UpdateColor()
 			endif 
+		endif 
 	elseif KeyPress == SelectKey
 
 		main.bridge.ostim.PlayTickBig()
-		ProcessEvent()
+		ProcessEvent(CurrentPage, selectedElement)
 	elseif KeyPress == ExitKey
-		main.bridge.ostim.PlayTickBig()
 		if main.bridge.ostim.chanceroll(50)
 			main.SayTopic(npc, main.goodbye)
 		endif 
@@ -647,23 +538,20 @@ Event OnKeyDown(Int KeyPress)
 	EndIf
 EndEvent
 
-function ProcessEvent()
-	orpage page = currentpage
-	int element = page.selectedButtonID
-
+function ProcessEvent(int page, int element)
 	if page == PageMain
-		if element == 0
+		if element == 1
 			main.SayTopic(npc, main.goodbye)
 			ExitDialogue()
-		elseif element == 1
-			ShowPage(PageRomance)
 		elseif element == 2
+			ShowPage(PageRomance)
+		elseif element == 3
 			ShowPage(PageInteract)
 		endif
 	elseif page == PageStartSex
-		if element == 0
+		if element == 1
 			ExitDialogue(0)
-		elseif element == 1
+		elseif element == 2
 			main.setLastSeduceTime(npc)
 			if prostitutionType == -1
 				main.bridge.startscene(playerref, npc)
@@ -683,15 +571,15 @@ function ProcessEvent()
 			endif
 			ExitDialogue()
 			SetAsLongTermFollower(npc, false)
-		elseif element == 2
+		elseif element == 3
 			prostitutionType = -1
 			SetAsLongTermFollower(npc, false)
 			ExitDialogue(1)
 		endif
 	elseif page == PageRomance
-		if element == 0
+		if element == 1
 			ShowPage(PageMain)
-		elseif element == 1
+		elseif element == 2
 			if main.TrySeduce(npc) ;|| true 
 				FireSuccessIncidcator(0)
 				prostitutionType = -1
@@ -744,7 +632,7 @@ function ProcessEvent()
 				main.increasedislikestat(npc, 5)
 			endif 
 			ExitDialogue()
-		elseif element == 2
+		elseif element == 3
 			if main.Trykiss(npc); || true
 				FireSuccessIncidcator(0)
 				main.kiss(npc)
@@ -755,28 +643,28 @@ function ProcessEvent()
 				main.increasedislikestat(npc, 5)
 				ExitDialogue()
 			endif 
-		elseif element == 3
+		elseif element == 4
 			ShowPage(PageSolicit)
 		EndIf
 	elseif page == PageInteract
-		if element == 0
+		if element == 1
 			ShowPage(PageMain)
-		elseif element == 1
-			ShowPage(PageInquire)
 		elseif element == 2
-			ShowPage(PageRelationship)
+			ShowPage(PageInquire)
 		elseif element == 3
+			ShowPage(PageRelationship)
+		elseif element == 4
 			ExitUI()
 			int val = main.gift(npc)
 			main.ProcessGift(npc, val)
 			ExitDialogue()
-		elseif element == 4
+		elseif element == 5
 			showpage(PageTalk)
 		EndIf
 	elseif page == PageInquire
-		if element == 0
+		if element == 1
 			
-		elseif element == 1
+		elseif element == 2
 			if main.TryInquire(npc)
 				FireSuccessIncidcator(0)
 				main.InquireSexualExperience(npc)
@@ -785,10 +673,10 @@ function ProcessEvent()
 				FireSuccessIncidcator(1)
 				main.increasedislikestat(npc, 2)
 			endif
-		elseif element == 2
+		elseif element == 3
 			FireSuccessIncidcator(0)
 			main.InquireRelationshipStatus(npc)
-		elseif element == 3
+		elseif element == 4
 			if main.TryInquire(npc)
 				FireSuccessIncidcator(0)
 				main.InquireSexuality(npc)
@@ -801,9 +689,9 @@ function ProcessEvent()
 
 		ShowPage(PageInteract)
 	elseif page == PageRelationship
-		if element == 0
+		if element == 1
 			ShowPage(PageInteract)
-		elseif element == 1
+		elseif element == 2
 			if !main.isPlayerPartner(npc)
 				if main.TryAskOut(npc)
 					FireSuccessIncidcator(0)
@@ -820,7 +708,7 @@ function ProcessEvent()
 			else 
 				main.BreakUpOrDivorce(npc)
 			endif 
-		elseif element == 2
+		elseif element == 3
 			if main.TryPropose(npc) ;|| true 
 				FireSuccessIncidcator(0)
 				main.Marry(npc)
@@ -831,14 +719,14 @@ function ProcessEvent()
 			endif
 		EndIf
 
-		if element != 0
+		if element != 1
 			ExitDialogue(5)
 		endif 
 
 	elseif page == PageSolicit
-		if element == 0
+		if element == 1
 			ShowPage(PageRomance)
-		elseif element == 1
+		elseif element == 2
 
 			ShowPage(PageSolicitSpecific)
 			if main.bridge.ostim.chanceroll(60)
@@ -848,9 +736,9 @@ function ProcessEvent()
 	elseif page == PageSolicitSpecific
 		int playerGold = main.GetPlayerGold()
 		int cost = main.getPrositutionCost(npc)
-		if element == 0
+		if element == 1
 			ShowPage(PageRomance)
-		elseif element == 1
+		elseif element == 2
 			if main.IsVirgin(npc)
 				cost *= 3
 			endif 
@@ -869,7 +757,7 @@ function ProcessEvent()
 				FireSuccessIncidcator(1)
 				debug.Notification("Insufficient gold")
 			endif
-		elseif element == 2
+		elseif element == 3
 			if playergold >= (cost * 0.25)
 				FireSuccessIncidcator(0)
 				prostitutionType = 2
@@ -879,7 +767,7 @@ function ProcessEvent()
 				FireSuccessIncidcator(1)
 				debug.Notification("Insufficient gold")
 			endif
-		elseif element == 3
+		elseif element == 4
 			if playergold >= (cost * 0.5)
 				FireSuccessIncidcator(0)
 				prostitutionType = 3
@@ -891,22 +779,22 @@ function ProcessEvent()
 			endif
 		EndIf
 
-		if element != 0
+		if element != 1
 			ExitDialogue()
 		endif 
 	elseif page == PageApologize
-		if element == 0
+		if element == 1
 			ExitDialogue()
-		elseif element == 1
+		elseif element == 2
 			main.TryApology(npc)
-			page.selectedbutton.click()
+			clickElement(getelementbyid(element))
 		EndIf
 	elseif page == PageTalk
-		if element == 0
+		if element == 1
 			
-		elseif element == 1
-			main.compliment(npc)
 		elseif element == 2
+			main.compliment(npc)
+		elseif element == 3
 			main.insult(npc)
 		endif 
 		showpage(PageInteract)
@@ -916,99 +804,186 @@ function ProcessEvent()
 
 EndFunction
 
+int[] Element1
+int[] Element2
+int[] Element3
+int[] Element4
+int[] Element5
 
 
-Function ShowPage(ORPage page)
-	if CurrentPage.visible
-		CurrentPage.Hide()
-		Utility.Wait(0.25)
+int[] function GetElementByID(int id)
+	if id == 1
+		return element1
+	elseif id == 2
+		return element2
+	elseif id == 3
+		return element3
+	elseif id == 4
+		return element4
+	elseif id == 5
+		return element5
+	else 
+		return new int[1]
 	endif 
-	CurrentPage = page 
+EndFunction
 
-	if !CurrentPage.built
-		ShowLoadingIcon()
-		while !CurrentPage.built
-			Utility.Wait(0.5)
-			if !uiopen
-				HideLoadingIcon()
-				return 
-			endif
-		EndWhile
-		HideLoadingIcon()
-	endif 
+int selectedElement
+int CurrentPage
+Function ShowPage(int pageID)
+	bool prostitute = main.IsProstitute(npc) 
 
-	; special logic for certain pages 
 
-	if page == pageromance 
+	CurrentPage = pageID
+	int elementTotal = 6
+
+	int i = 1
+	int max = elementTotal
+
+	while i < max
+		DestroyElement(GetElementByID(i))
+
+		i += 1
+	EndWhile
+
+	ReInitElementStorage()
+
+	int layoutCount = 3
+
+	if pageID == PageMain
+		int[] posData = GetElementLayoutByElementCount(layoutCount)
+
+		Element1 = RenderElement(posData[0], "ecks", colorLightRed, "Exit")
+		Element2 = RenderElement(posData[1], "heart", colorPink, "Romance")
+		Element3 = RenderElement(posData[2], "dot", colorBlue, "Interact")
+
+	elseif pageid == PageStartSex
+		int[] posData = GetElementLayoutByElementCount(layoutCount)
+
+		Element1 = RenderElement(posData[0], "ecks", colorLightRed, "Exit")
+		Element2 = RenderElement(posData[1], "heart", colorRed, "Have sex")
+		Element3 = RenderElement(posData[2], "cancel", colorRed, "Cancel Sex")
+	Elseif pageid == PageRomance
+		if prostitute
+			layoutCount += 1
+		endif 
+
+		string seduce
+		string kiss
 		if main.IsPlayerSpouse(npc)
-			page.setbuttontext(1, "Seduce ")
-			page.setbuttontext(2, "Kiss ")
-
+			kiss = "Kiss "
+			seduce = "Seduce "
 		else 
-			page.setbuttontext(2, "Try to kiss")
-
+			kiss = "Try to kiss"
 			if PlayerIsFollowed()
-				page.setbuttontext(1, "Invite to threesome")
+				seduce = "Invite to threesome"
 			else 
-				page.setbuttontext(1, "Try to seduce")
+				seduce = "Try to seduce"
 			endif 
+
 		endif 
 
-		if isprostitute 
-			if page.hasbutton("Prostitution")
+		int[] posData = GetElementLayoutByElementCount(layoutCount)
 
-			else 
-				page.addbutton("coin", colorYellow, "Prostitution", load = true)
-				page.RecalculateLayout()
-			endif 
-		else 
-			if page.hasbutton("Prostitution")
-				page.removebutton("Prostitution")
-				page.RecalculateLayout()
-			endif 
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "heart", colorred, seduce)
+		Element3 = RenderElement(posData[2], "lips", colorred, kiss)
+		
+
+
+		If prostitute
+			Element4 = RenderElement(posData[3], "coin", colorYellow, "Prostitution")
+		EndIf
+
+	elseif pageid == PageApologize
+		int[] posData = GetElementLayoutByElementCount(layoutCount - 1)
+
+		Element1 = RenderElement(posData[0], "ecks", colorLightRed, "Exit")
+		Element2 = RenderElement(posData[1], "anger", colorred, "Apologize")
+	Elseif pageid == PageInteract
+		int[] posData = GetElementLayoutByElementCount(layoutCount + 2)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "question", colorGreen, "Inquire")
+		Element3 = RenderElement(posData[2], "ring", colorBlue, "Relationship")
+		Element4 = RenderElement(posData[3], "gift", colorYellow, "Give gift")
+		Element5 = RenderElement(posData[4], "speech1", colorPink, "say")
+
+	Elseif pageid == PageInquire
+		int[] posData = GetElementLayoutByElementCount(layoutCount + 1)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "question", colorPink, "Ask about sexual experience")
+		Element3 = RenderElement(posData[2], "question1", colorYellow, "Ask about current relationships")
+		Element4 = RenderElement(posData[3], "question2", colorBlue, "Ask about sexuality")
+	Elseif pageid == PageRelationship
+		int count = layoutCount
+		if main.IsPlayerMarried()
+			count -= 1
 		endif 
-	elseif page == PageRelationship
+		int[] posData = GetElementLayoutByElementCount(count)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
 		if !main.isPlayerPartner(npc)
-			page.setbuttonicon(1, "heartring")
-			page.setbuttontext(1, "Confess love")
-			page.setbuttonsubtext(1, name + " may become your " + gfbf)
+			Element2 = RenderElement(posData[1], "heartring", colorRed, "Confess love", subtextstr=name + " may become your " + gfbf)
 		else 
-			page.setbuttonsubtext(1, "")
+			string a ="Break up"
 			if main.IsPlayerSpouse(npc)
-				page.setbuttontext(1, "Divorce")
-			else 
-				page.setbuttontext(1, "Break up")
+				a = "Divorce"
 			endif 
-			page.setbuttonicon(1, "cancel")
-		endif 
 
-
+			Element2 = RenderElement(posData[1], "cancel", colorRed, a)
+		endif
+		
 		if !main.IsPlayerMarried()
-			if page.hasbutton("Propose marriage")
-
-			else 
-				page.addbutton("marry", colorYellow, "Propose marriage", load = true)
-				page.RecalculateLayout()
-			endif 
-		else 
-			if page.hasbutton("Propose marriage")
-				page.removebutton("Propose marriage")
-				page.RecalculateLayout()
-			endif 
+			Element3 = RenderElement(posData[2], "marry", colorYellow, "Propose marriage")
+		endif
+	Elseif pageid == PageSolicit
+		int cost = main.getPrositutionCost(npc)
+		int vaginalCost = cost 
+		if main.IsVirgin(npc)
+			vaginalCost *= 3
 		endif 
-	elseif page == PageSolicit
-		page.SetButtonSubtext(1, "Price: " + (baseCost * 0.25) as int + " - " + (vaginalCost) + " septims")
 
-	elseif page == PageSolicitSpecific
-		page.SetButtonSubtext(1, vaginalCost + " septims")
-		page.SetButtonSubtext(2, (basecost * 0.25) as int + " septims")
-		page.SetButtonSubtext(3, (basecost * 0.5) as int + " septims")
-	endif 
+		debug.Notification("You have " + main.GetPlayerGold() + " gold")
+		int[] posData = GetElementLayoutByElementCount(layoutCount - 1)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "coin", colorYellow, "Solicit", subtextstr="Price: " + (cost * 0.25) as int + " - " + (vaginalCost) + " septims")
+
+	Elseif pageid == PageSolicitSpecific
+		int cost = main.getPrositutionCost(npc)
+		int vaginalCost = cost 
+		if main.IsVirgin(npc)
+			vaginalCost *= 3
+		endif 
+
+		int[] posData = GetElementLayoutByElementCount(layoutCount + 1)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "vagina", colorPink, "Vaginal/anything", subtextstr=vaginalCost + " septims")
+		Element3 = RenderElement(posData[2], "hand", colorPink, "Hand job", subtextstr= (cost * 0.25) as int + " septims")
+		Element4 = RenderElement(posData[3], "lips", colorPink, "Blow job", subtextstr= (cost * 0.5) as int + " septims")
+		
+	Elseif pageid == PageTalk
+		int[] posData = GetElementLayoutByElementCount(layoutCount)
+
+		Element1 = RenderElement(posData[0], "arrow", colorLightRed, "Back")
+		Element2 = RenderElement(posData[1], "speech1", colorGreen, "Compliment ")
+		Element3 = RenderElement(posData[2], "speech2", colorYellow, "Insult ")
+	EndIf
+
+	selectedElement = 2
+
+	i = 1
+
+	while i < max
+		DeselectElement(GetElementByID(i))
+
+		i += 1
+	EndWhile
 
 
-
-
-	CurrentPage.CallEvent("Show")
+	SelectElement(GetElementByID(selectedElement))
 
 	if firstOpen
 		firstopen = false
@@ -1047,6 +1022,25 @@ int[] Function GetElementLayoutByElementCount(int count)
 
 	return ret
 EndFunction
+
+Function DestroyElement(int[] element)
+	int i = 0
+	int l = Element.Length
+
+	while i < l
+		if (Element.Length != 1)
+			if (i != 2) && (i != 0) && (i != 1)
+				iWidgets.Destroy(Element[i])
+			elseif (i == 2) || (i == 1)
+				iwidgets.setVisible(element[i], 0)
+			elseif i == 0
+				HideUIBracket(element[i])
+			endif 
+		EndIf
+
+		i += 1
+	EndWhile
+EndFunction 
 
 int nameelement
 
@@ -1090,16 +1084,16 @@ Function SetNameDis(string st)
 endfunction
 
 Function UpdateColor()
-	if currentpage.selectedbuttonid == 0
+	if selectedElement == 1
 		SetNameColor(colorWhite)
 	endif 
 
 	if CurrentPage == PageRomance
-		if (currentpage.selectedbuttonid == 1)
+		if (selectedElement == 2)
 			
 			int NPCSV = main.GetSeductionSV(npc)
 			CalcColorBasedOnDiff(npcsv)
-		elseif (currentpage.selectedbuttonid == 2)
+		elseif (selectedelement == 3)
 			int NPCSV = main.GetKissSV(npc)
 
 			CalcColorBasedOnDiff(npcsv)
@@ -1109,26 +1103,26 @@ Function UpdateColor()
 
 	elseif currentpage == PageRelationship
 
-		if currentpage.selectedbuttonid == 1
+		if selectedelement == 2
 			if !main.isPlayerPartner(npc) ; ask out button
 				int NPCSV = main.getaskoutSV(npc)
 				CalcColorBasedOnDiff(npcsv)
 			else ;breakup button 
 				SetNameColor(colorwhite)
 			endif 
-		elseif currentpage.selectedbuttonid == 2 ;marry button
+		elseif selectedelement == 3 ;marry button
 			int NPCSV = main.getmarrysv(npc)
 			CalcColorBasedOnDiff(npcsv)
 			
 		EndIf
 	elseif currentpage == PageInquire 
-		if (currentpage.selectedbuttonid == 1) || (currentpage.selectedbuttonid == 3)
+		if (selectedelement == 2) || (selectedElement == 4)
 			if main.TryInquire(npc)
 				SetNameColor(colorgreen)
 			else 
 				SetNameColor(colorlightred)
 			endif 
-		elseif (currentpage.selectedbuttonid == 2)
+		elseif (selectedelement == 3)
 			setnamecolor(colorgreen)
 		else 
 			SetNameColor(colorwhite)
@@ -1158,16 +1152,163 @@ Function DeleteName()
 	iwidgets.destroy(nameelement)
 EndFunction 
 
+function DeselectElement(int[] element)
 
+	iwidgets.setSize(element[0], (size * 0.75) as int, (size * 0.75) as int)
+	iwidgets.setSize(element[1], ((size/4) * 0.75) as int, ((size/4) * 0.75) as int)
+
+
+	iWidgets.doTransitionByTime(Element[0], 50, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+	iWidgets.doTransitionByTime(Element[1], 50, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+	iWidgets.doTransitionByTime(Element[2], 0, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+	iWidgets.doTransitionByTime(Element[3], 0, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+EndFunction
+
+function SelectElement(int[] element)
+	iwidgets.setSize(element[0], size , size)
+	iwidgets.setSize(element[1], (size/4), (size/4))
+
+	int i = 0
+	int l = Element.Length
+
+	while i < l
+		iWidgets.doTransitionByTime(Element[i], 100, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+		
+
+		i += 1
+	EndWhile
+EndFunction
 
 
 int size = 150
 
+int[] Function RenderElement(int slot, string icon, int[] color, string Textstr, string subtextstr = "", bool subtextIsDialogue = false) 
+	
+
+	
 
 
+	;Int Bracket = iWidgets.loadLibraryWidget("uibracket")
+	Int Bracket = GetUIBracket()
+	iWidgets.setSize(Bracket, size, size)
+	int[] coords = GetElementCordsBySlot(slot)
+	iWidgets.setPos(Bracket, coords[0] , coords[1])
+
+;	float time = game.GetRealHoursPassed() * 60 * 60
+	
+	int core = GetCoreWidget(icon)
+	iWidgets.setSize(core, size/4, size/4)
+	iWidgets.setPos(core, coords[0] , coords[1])
+	iWidgets.setRGB(core, color[0], color[1], color[2])
+
+;	OsexIntegrationMain.Console((game.GetRealHoursPassed() * 60 * 60) - time)
+
+	;int text = iWidgets.loadText(Textstr, font = textfont, size = 24 )
+	int text = GetTextWidget(textstr, 24)
+	iWidgets.setPos(text, coords[0] , coords[1] - 45)
+
+	int subtext
+	if subtextstr != ""
+		subtext = iWidgets.loadText(subtextstr, font = textfont, size = 18 )
+		iWidgets.setPos(subtext, coords[0] , coords[1] + 30)
+		if subtextIsDialogue
+			iWidgets.setRGB(subtext, 255, 255, 255)
+		else 
+			iWidgets.setRGB(subtext, 181, 181, 181)
+		EndIf
+	else 
+		subtext = -1
+	endif 
+	
+	
+	
+
+
+	iwidgets.setTransparency(bracket, 0)
+	iwidgets.setTransparency(core, 0)
+	iwidgets.setTransparency(text, 0)
+	iwidgets.setTransparency(subtext, 0)
+
+	iWidgets.setVisible(Bracket)
+	iWidgets.setVisible(core)
+	iWidgets.setVisible(text)
+	iWidgets.setVisible(subtext)
+
+
+	int[] Element = new int[4]
+	Element[0] = Bracket
+	Element[1] = core
+	Element[2] = text
+	Element[3] = subtext
+
+	
+
+
+	return Element
+EndFunction
+
+Function FadeElementIn(int[] Element)
+	int i = 0
+	int l = Element.Length
+
+	while i < l
+		iWidgets.doTransitionByTime(Element[i], 100, seconds = 1.0, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+
+		i += 1
+	EndWhile
+EndFunction
+
+Function FadeElementOut(int[] Element)
+	int i = 0
+	int l = Element.Length
+
+	while i < l
+		iWidgets.doTransitionByTime(Element[i], 0, seconds = 0.25, targetAttribute = "alpha", easingClass = "none", easingMethod = "none", delay = 0.0)
+
+		i += 1
+	EndWhile
+EndFunction
+
+Function clickElement(int[] Element)
+	iwidgets.setSize(element[0], (size * 0.75) as int, (size * 0.75) as int)
+	iwidgets.setSize(element[1], ((size/4) * 0.75) as int, ((size/4) * 0.75) as int)
+
+	Utility.Wait(0.1)
+
+	iwidgets.setSize(element[0], (size) as int, (size ) as int)
+	iwidgets.setSize(element[1], ((size/4)) as int, ((size/4) ) as int)
+EndFunction
+
+function FadeOutAllElements()
+	int i = 0
+	int max = 6
+
+	while i < max 
+		int[] element = GetElementByID(i)
+
+		If element.length != 1
+			FadeElementOut(element)
+		EndIf
+		i += 1
+	EndWhile
+EndFunction
+
+function DestroyAllElements()
+	int i = 0
+	int max = 6
+
+	while i < max 
+		int[] element = GetElementByID(i)
+
+		If element.length != 1
+			DestroyElement(element)
+		EndIf
+		i += 1
+	EndWhile
+EndFunction
 
 int yOffset = 200
-int[] function GetElementCordsBySlot(int slot) 
+int[] function GetElementCordsBySlot(int slot)
 	int[] coords = new int[2]
 
 	
@@ -1200,10 +1341,280 @@ int[] function GetElementCordsBySlot(int slot)
 	return coords
 EndFunction
 
+Function ReInitElementStorage()
+	Element1 = new Int[1]
+	Element2 = Element1
+	Element3 = Element1
+	Element4 = Element1
+	Element5 = Element1
+EndFunction
+
+
+string[] TextWidgetkeys
+int[] TextWidgetValues
+
+
+int Function GetTextWidget(string widgettxt, int sizes)
+	if main.bridge.ostim.StringArrayContainsValue(TextWidgetkeys, widgettxt)
+		int z
+		Int i = 0
+		Int L = TextWidgetkeys.Length
+		While (i < L)
+			If (TextWidgetkeys[i] == widgettxt)
+				z = i
+				i = L
+			EndIf
+			i += 1
+		EndWhile
+
+		;console("Cached text found: " + TextWidgetKeys[z])
+		iWidgets.setTransparency(TextWidgetValues[z], 0)
+		return TextWidgetValues[z]
+
+	else 
+		;console("No cache found, making new...")
+		int wid = iWidgets.loadText(widgettxt, font = textfont, size = sizes )
+
+		TextWidgetkeys = PapyrusUtil.PushString(TextWidgetkeys, widgettxt)
+		TextWidgetValues = PapyrusUtil.Pushint(TextWidgetValues, wid)
+
+		if TextWidgetkeys.length > 60
+			console("Warning, widget cache is: " + TextWidgetkeys.length)
+			console("memory leak?")
+		endif 
+
+		return wid
+
+	EndIf
+
+EndFunction
+
 function console(string in)
 	main.console(in)
 EndFunction
 
+
+
+
+
+Function SendAsyncRender(int slot, string icon, int[] color, string Textstr, int elementID, string subtextstr = "", bool subtextIsDialogue = false)
+	int handle = ModEvent.Create("oromance_render")
+
+	;ModEvent.PushForm(handle, self)
+	ModEvent.PushInt(handle, slot)
+	ModEvent.PushString(handle, icon)
+	ModEvent.PushInt(handle, 0)
+	ModEvent.PushString(handle, textstr)
+	ModEvent.PushInt(handle, elementID)
+	ModEvent.PushString(handle, subtextstr)
+	ModEvent.PushBool(handle, subtextIsDialogue)
+
+	ModEvent.Send(handle)
+EndFunction
+
+Event RenderElementAsync(int slot, string icon, int color, string Textstr, int elementID, string subtextstr, bool subtextIsDialogue)
+	float time = game.GetRealHoursPassed() * 60 * 60
+
+	
+
+
+	Int Bracket = iWidgets.loadLibraryWidget("uibracket")
+	iWidgets.setSize(Bracket, size, size)
+	int[] coords = GetElementCordsBySlot(slot)
+	iWidgets.setPos(Bracket, coords[0] , coords[1])
+
+
+	int core = iWidgets.loadLibraryWidget(icon)
+	iWidgets.setSize(core, size/4, size/4)
+	iWidgets.setPos(core, coords[0] , coords[1])
+	;iWidgets.setRGB(core, color[0], color[1], color[2])
+
+	int text = iWidgets.loadText(Textstr, font = "$EverywhereFont", size = 24 )
+	iWidgets.setPos(text, coords[0] , coords[1] - 45)
+
+	int subtext
+	if subtextstr != ""
+		subtext = iWidgets.loadText(subtextstr, font = "$EverywhereFont", size = 18 )
+		iWidgets.setPos(subtext, coords[0] , coords[1] + 30)
+		if subtextIsDialogue
+			iWidgets.setRGB(subtext, 255, 255, 255)
+		else 
+			iWidgets.setRGB(subtext, 181, 181, 181)
+		EndIf
+	else 
+		subtext = -1
+	endif 
+	
+	
+	;OsexIntegrationMain.Console((game.GetRealHoursPassed() * 60 * 60) - time)
+
+
+	iwidgets.setTransparency(bracket, 0)
+	iwidgets.setTransparency(core, 0)
+	iwidgets.setTransparency(text, 0)
+	iwidgets.setTransparency(subtext, 0)
+
+	iWidgets.setVisible(Bracket)
+	iWidgets.setVisible(core)
+	iWidgets.setVisible(text)
+	iWidgets.setVisible(subtext)
+
+
+	int[] Element = new int[4]
+	Element[0] = Bracket
+	Element[1] = core
+	Element[2] = text
+	Element[3] = subtext
+
+	if elementID == 1
+		element1 = Element
+	elseif elementID == 2
+		element2 = Element
+	elseif elementID == 3
+		element3 = Element
+	elseif elementID == 4
+		element4 = Element
+	;elseif elementID == 5
+	;	element5 = Element
+	EndIf
+
+EndEvent
+
+function WaitForAsyncRender(int elementcount)
+	bool done = false 
+
+	while !done 
+		int doneCount = 0
+		int i = elementcount
+
+		while i != 0
+			if GetElementByID(i).Length > 1
+				doneCount += 1
+			endif 
+
+			i -= 1
+		EndWhile
+
+		if doneCount == elementcount
+			done = true 
+		endif 
+		Utility.Wait(0.1)
+	EndWhile
+
+EndFunction
+
+int bracket1 
+int bracket2 
+int bracket3 
+int bracket4 
+int bracket5 
+
+bool bracket1visible
+bool bracket2visible
+bool bracket3visible
+bool bracket4visible
+bool bracket5visible
+
+int function GetUIBracket()
+	if !bracket1visible
+		bracket1visible = true
+		return bracket1
+	elseif !bracket2visible
+		bracket2visible = true
+		return bracket2
+	elseif !bracket3visible
+		bracket3visible = true
+		return bracket3
+	elseif !bracket4visible
+		bracket4visible = true
+		return bracket4
+	elseif !bracket5visible
+		bracket5visible = true
+		return bracket5
+	endif
+
+endfunction
+
+function HideUIBracket(int bracket)
+	if bracket == bracket1  
+		iwidgets.setVisible(bracket, 0)
+		bracket1visible = false
+	elseif bracket == bracket2 
+		iwidgets.setVisible(bracket, 0)
+		bracket2visible = false
+	elseif bracket == bracket3 
+		iwidgets.setVisible(bracket, 0)
+		bracket3visible = false
+	elseif bracket == bracket4 
+		iwidgets.setVisible(bracket, 0)
+		bracket4visible = false
+	elseif bracket == bracket5 
+		iwidgets.setVisible(bracket, 0)
+		bracket5visible = false
+	endif
+
+endfunction
+
+function InitBrackets()
+	bracket1 = iWidgets.loadLibraryWidget("uibracket")
+	iwidgets.setVisible(bracket1, 0)
+	bracket1visible = false
+
+	bracket2 = iWidgets.loadLibraryWidget("uibracket")
+	iwidgets.setVisible(bracket2, 0)
+	bracket2visible = false
+
+	bracket3 = iWidgets.loadLibraryWidget("uibracket")
+	iwidgets.setVisible(bracket3, 0)
+	bracket3visible = false
+
+	bracket4 = iWidgets.loadLibraryWidget("uibracket")
+	iwidgets.setVisible(bracket4, 0)
+	bracket4visible = false
+
+	bracket5 = iWidgets.loadLibraryWidget("uibracket")
+	iwidgets.setVisible(bracket5, 0)
+	bracket5visible = false
+endfunction
+
+
+string[] CoreWidgetkeys
+int[] CoreWidgetValues
+
+
+int Function GetCoreWidget(string coreicon)
+	if main.bridge.ostim.StringArrayContainsValue(CoreWidgetkeys, coreicon)
+		int z
+		Int i = 0
+		Int L = CoreWidgetkeys.Length
+		While (i < L)
+			If (CoreWidgetkeys[i] == coreicon)
+				z = i
+				i = L
+			EndIf
+			i += 1
+		EndWhile
+
+		;console("Cached text found: " + CoreWidgetkeys[z])
+		return CoreWidgetValues[z]
+
+	else 
+		;console("No cache found, making new...")
+		int wid = iWidgets.loadLibraryWidget(coreicon)
+
+		CoreWidgetkeys = PapyrusUtil.PushString(CoreWidgetkeys, coreicon)
+		CoreWidgetValues = PapyrusUtil.Pushint(CoreWidgetValues, wid)
+
+		if CoreWidgetkeys.length > 60
+			console("Warning, widget cache is: " + CoreWidgetkeys.length)
+			console("memory leak?")
+		endif 
+
+		return wid
+
+	EndIf
+
+EndFunction
 
 function ShowInstalled()
 	int msg = iWidgets.loadText("ORomance installed", font = "$EverywhereFont"	)
@@ -1241,3 +1652,36 @@ function HideLoadingIcon()
 	iwidgets.setVisible(loading, 0)
 	iwidgets.destroy(loading)
 endfunction
+
+function RebuildCache()
+	ShowLoadingIcon()
+
+	InitBrackets()
+	RebuildCoreCache()
+	RebuildTextCache()
+
+	HideLoadingIcon()
+endfunction 
+
+Function RebuildCoreCache()
+	Int i = 0
+	Int L = CoreWidgetkeys.Length
+	while i < L
+		CoreWidgetValues[i] = iWidgets.loadLibraryWidget(CoreWidgetkeys[i])
+
+		i += 1
+	endwhile 
+
+endfunction
+
+Function RebuildTextCache()
+	Int i = 0
+	Int L = TextWidgetkeys.Length
+	while i < L
+		TextWidgetValues[i] = iWidgets.loadText(TextWidgetkeys[i], font = textfont)
+
+		i += 1
+	endwhile 
+
+endfunction
+;iWidgets.loadText(widgettxt, font = textfont, size = sizes )
