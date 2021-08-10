@@ -7,6 +7,7 @@ ORomanceScript main
 
 bool hadOrgasmRelIncrease
 
+
 Function Startup()
 
 	console("ORomance OStim bridge ready")
@@ -324,6 +325,11 @@ Event ORomanceAsync(string eventName, string strArg, float numArg, Form sender)
 EndEvent
 
 function CheckForPlayerPartners()
+	{Find player partners and report them as cheating if found}
+	if ostim.HasSceneMetadata("or_player_nocheat")
+		return 
+	endif 
+
 	actor[] acts
 	int i = 0
 	int l 
@@ -359,6 +365,11 @@ function CheckForPlayerPartners()
 EndFunction
 
 function CheckForNPCSpouses(actor mainNPC)
+	{Find NPC partners and report them as cheating to them if found}
+	if ostim.HasSceneMetadata("or_npc_nocheat")
+		return 
+	endif 
+	
 	actor[] acts
 	int i = 0
 	int l 
