@@ -79,7 +79,6 @@ GlobalVariable property ORUseStationaryMode auto
 GlobalVariable property ORLeft auto
 GlobalVariable property ORRight auto
 GlobalVariable property ORAlwaysAllowNakadashi auto 
-bool Property ORCheatingConsequencesEnabled auto
 
 int Function GetDifficultyDiff()
 	return ORDifficulty.GetValueInt() as int
