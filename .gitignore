@@ -3,3 +3,4 @@ meta.ini
 *.ppj
 *.pex
 !ORomance_CI.ppj
+*.bat
