@@ -821,7 +821,7 @@ Event OnGameLoad()
 EndEvent
 
 Event onKeyDown(int keyn)
-	If (Utility.IsInMenuMode() || UI.IsMenuOpen("console")) || oui.uiopen || bridge.ostim.AnimationRunning()
+	If outils.MenuOpen() || oui.uiopen || bridge.ostim.AnimationRunning()
 		Return
 	EndIf
 
