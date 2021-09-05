@@ -436,6 +436,7 @@ EndFunction
 bool CacheRebuild = false
 Function OnLoad()
 	uiopen = false
+	CacheRebuild = true
 	SelectKey = Input.GetMappedKey("Activate")
 	ExitKey = Input.GetMappedKey("Tween Menu")
 	
@@ -455,7 +456,7 @@ Function OnLoad()
 	RegisterForModEvent("oromance_success", "SuccessIndicatorThread")
 
 	;if main.DoCacheRebuilds
-		CacheRebuild = true
+		
 	;else 
 	;	ClearCache()
 	;endif
