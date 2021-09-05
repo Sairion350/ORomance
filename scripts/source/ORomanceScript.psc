@@ -152,7 +152,6 @@ Event OnInit()
 	RegisterForSingleUpdate(1)
 	
 	OUtils.RegisterForOUpdate(self)
-	bridge.ostim.RegisterForGameLoadEvent(self)
 
 
 	onload()
@@ -805,6 +804,7 @@ function CatchPlayerCheating(actor npc)
 endfunction 
 
 function onload()
+	console("ORomance loading...")
 	InteractKey = ORKey.GetValueInt() 
 	RegisterForKey(InteractKey)
 	if debugbuild
@@ -815,10 +815,7 @@ function onload()
 	oui.OnLoad()
 EndFunction
 
-Event OnGameLoad()
-	console("ORomance loading...")
-	onload()
-EndEvent
+
 
 Event onKeyDown(int keyn)
 	If outils.MenuOpen() || oui.uiopen || bridge.ostim.AnimationRunning()

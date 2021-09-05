@@ -106,6 +106,7 @@ Function EnterDialogueWith(actor act)
 
 	if CacheRebuild
 		CacheRebuild = False
+		debug.MessageBox("doing cache rebuild")
 		RebuildCache()
 	endif 
 
@@ -442,7 +443,6 @@ Function OnLoad()
 	rightKey = main.GetRightKey()
 
 
-	console(ExitKey)
 
 	RegisterForKey(leftkey)
 	RegisterForKey(rightkey)
@@ -454,11 +454,11 @@ Function OnLoad()
 
 	RegisterForModEvent("oromance_success", "SuccessIndicatorThread")
 
-	if main.DoCacheRebuilds
+	;if main.DoCacheRebuilds
 		CacheRebuild = true
-	else 
-		ClearCache()
-	endif
+	;else 
+	;	ClearCache()
+	;endif
 	
 	;RegisterForModEvent("oromance_render", "RenderElementAsync")
 	
