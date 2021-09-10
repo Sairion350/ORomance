@@ -106,7 +106,6 @@ Function EnterDialogueWith(actor act)
 
 	if CacheRebuild
 		CacheRebuild = False
-		debug.MessageBox("doing cache rebuild")
 		RebuildCache()
 	endif 
 
