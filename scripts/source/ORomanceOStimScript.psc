@@ -384,10 +384,12 @@ function CheckForNPCSpouses(actor mainNPC)
 				if playerref.IsDetectedBy(npc) && (main.getMonogamyDesireStat(npc) > 15)
 					;console("Starting combat")
 					main.oui.FireSuccessIncidcator(1)
-					actor a = ostim.GetSexPartner(mainnpc)
-					npc.StartCombat(a)
-					main.increasedislikestat(a, 10)
-					main.increasehatestat(a, 10)
+					actor PersonHavingSexWithWife = ostim.GetSexPartner(mainnpc) ;this will usually be the player
+					npc.StartCombat(PersonHavingSexWithWife)
+					if PersonHavingSexWithWife == playerref
+						main.increasedislikestat(npc, 10)
+						main.increasehatestat(npc, 10)
+					endif 
 				endif 
 			endif
 
