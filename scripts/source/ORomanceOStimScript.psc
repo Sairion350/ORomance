@@ -344,7 +344,7 @@ function CheckForPlayerPartners()
 				;console("Player is detected by npc: " + npc.getdisplayname())
 				
 						;uh-oh
-						if ostim.IsSceneAggressiveThemed() && (ostim.getsexpartner(ostim.GetAggressiveActor()) == playerref)
+						if ostim.IsSceneAggressiveThemed() && (ostim.IsVictim(playerref))
 							if ostim.AnimationRunning()
 								npc.StartCombat(ostim.GetAggressiveActor())
 							endif
