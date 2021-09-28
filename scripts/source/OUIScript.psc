@@ -135,6 +135,8 @@ Function ExitDialogue(int waitTime = 2)
 	SetAsFollower(npc, false)
 	SetAsWaiting(npc, false)
 
+	npc.EvaluatePackage()
+
 EndFunction
 
 
