@@ -253,6 +253,7 @@ EndEvent
 
 bool playerCameInsidePussy
 Event OstimStart(string eventName, string strArg, float numArg, Form sender)
+	SendModEvent("oromance_sexthread")
 	hadOrgasmRelIncrease = false
 	playerCameInsidePussy = false
 	if iskiss 
