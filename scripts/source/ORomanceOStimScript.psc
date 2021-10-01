@@ -175,7 +175,7 @@ Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, ac
 EndFunction
 
 Event OstimOrgasm(string eventName, string strArg, float numArg, Form sender)
-	if !ostim.IsActorInvolved(playerref)
+	if !ostim.IsActorInvolved(playerref) || ostim.IsSoloScene()
 		return 
 	endif 
 	
@@ -253,6 +253,10 @@ EndEvent
 
 bool playerCameInsidePussy
 Event OstimStart(string eventName, string strArg, float numArg, Form sender)
+	if ostim.IsSoloScene()
+		return 
+	endif 
+	
 	SendModEvent("oromance_sexthread")
 	hadOrgasmRelIncrease = false
 	playerCameInsidePussy = false
