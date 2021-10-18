@@ -176,6 +176,10 @@ Event SuccessIndicatorThread(int type)
 	elseif type == 2
 		icon = "ecks"
 		color = colorRed 
+	elseif type == 3
+		icon = "check"
+		color = colorGreen
+		soundz = main.success
 	endif 
 
 	Int Indicator = iWidgets.loadLibraryWidget(icon)
@@ -237,11 +241,17 @@ Event FollowerSetThread(String EventName, String zAnimation, Float NumArg, Form 
 		
 		float lastDistance
 
+		int timer = 0 
 		while distance != lastDistance
 			lastDistance = distance 
 			distance = npc.GetDistance(playerref)
 
 			Utility.Wait(0.5)
+			timer += 1
+			if timer > 240 
+				SetAsFollower(npc, false)
+				return 
+			endif 
 		endwhile 
 		SetAsFollower(npc, false)
 		SetAsWaiting(npc, true)
@@ -433,6 +443,10 @@ function Startup()
 	
 
 EndFunction 
+
+bool Function CacheRebuildNeeded()
+	return CacheRebuild
+EndFunction
 
 bool CacheRebuild = false
 Function OnLoad()
@@ -1658,12 +1672,24 @@ endfunction
 function RebuildCache()
 	ShowLoadingIcon()
 
-	InitBrackets()
-	RebuildCoreCache()
-	RebuildTextCache()
+	RebuildCacheSilent()
 
 	HideLoadingIcon()
 endfunction 
+
+Function RebuildCacheSilent()
+	if OSANative.TryLock("orcache")
+		; lock secure
+		InitBrackets()
+		RebuildCoreCache()
+		RebuildTextCache()
+	else 
+		; Someone else is working, wait for them to finish then return 
+		outils.lock("orcache")
+	endif 
+	osanative.Unlock("orcache")
+	CacheRebuild = false
+EndFunction
 
 Function RebuildCoreCache()
 	Int i = 0

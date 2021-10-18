@@ -49,6 +49,14 @@ int prostitutionType
 
 Function StartScene(actor dom, actor sub, bool kiss = false, int sexType = 1, actor third = none)
 
+	if ostim.AnimationRunning()
+		if ostim.IsNPCScene()
+			ostim.converttosubthread()
+		else 
+			debug.Notification("Already in scene")
+		endif 
+	endif 
+
 
 	prostitutionType = sextype
 

@@ -818,7 +818,7 @@ EndFunction
 
 
 Event onKeyDown(int keyn)
-	If outils.MenuOpen() || oui.uiopen || bridge.ostim.AnimationRunning()
+	If outils.MenuOpen() || oui.uiopen || (bridge.ostim.AnimationRunning() && bridge.ostim.isplayerinvolved())
 		Return
 	EndIf
 
