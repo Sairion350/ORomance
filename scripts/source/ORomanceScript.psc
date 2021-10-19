@@ -111,7 +111,7 @@ Event OnInit()
 	oui.Startup()
 	bridge.startup()
 
-	if bridge.ostim.GetAPIVersion() < 16
+	if bridge.ostim.GetAPIVersion() < 25
 		debug.MessageBox("Your OStim version is out of date. ORomance requires a newer version.")
 		return
 	endif 
